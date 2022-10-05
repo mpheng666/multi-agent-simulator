@@ -8,3 +8,6 @@ A simple general 2D simulator for single/multi-agents algorithms.
 4. Synthetic Autonomy
 5. Self-Organized Autonomy
 6. etc
+
+# Tech stack
+1. SFML for graphics
