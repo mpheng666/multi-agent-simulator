@@ -17,10 +17,16 @@ int main() {
     int grid_h = height / num_row;
 
     sf::Texture blue_texture;
-    // blue_texture.loadFromFile("../images/poly_light_blue.png");
     blue_texture.loadFromFile("../images/rainbow_square.png");
     sf::Sprite sprite_blue(blue_texture);
-    // sprite_blue.scale(0.6, 0.6);
+
+    sf::Texture texture_agent;
+    texture_agent.loadFromFile("../images/agent_lizard.png");
+    sf::Sprite sprite_agent(texture_agent);
+    auto agent_size = texture_agent.getSize();
+    double agent_scale_w = grid_w / agent_size.x;
+    double agent_scale_h = grid_h / agent_size.y;
+    sprite_agent.scale(agent_scale_w, agent_scale_h);
 
     while (window.isOpen()) {
         sf::Vector2i pos = sf::Mouse::getPosition(window);
@@ -34,10 +40,14 @@ int main() {
                 window.close();
             }
             if (event.type == sf::Event::MouseButtonPressed) {
-                // if (event.key.code == sf::Mouse::Left)
-                //     sgrid[x][y] = grid[x][y];
-                // else if (event.key.code == sf::Mouse::Right)
-                //     sgrid[x][y] = 11;
+                if (event.key.code == sf::Mouse::Left)
+                {
+                    // sgrid[x][y] = grid[x][y];
+                }
+                else if (event.key.code == sf::Mouse::Right)
+                {
+                    // sgrid[x][y] = 11;
+                }
             }
         }
 
@@ -55,9 +65,14 @@ int main() {
                 window.draw(sprite_blue);
             }
         }
-        // sprite_blue.setTextureRect(sf::IntRect(0, 0, grid_w, grid_h));
-        // sprite_blue.setPosition(10, 0);
-        // window.draw(sprite_blue);
+
+        sprite_agent.setTextureRect(sf::IntRect(0, 0,
+                                                agent_size.x * scale_for_line,
+                                                agent_size.y * scale_for_line));
+        sprite_agent.setPosition(scale_for_offset * grid_w,
+                                 scale_for_offset * grid_h);
+
+        window.draw(sprite_agent);
 
         window.display();
     }
