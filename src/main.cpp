@@ -1,4 +1,5 @@
 #include <SFML/Graphics.hpp>
+#include "grid.hpp"
 
 int main() {
     srand(time(0));
@@ -8,6 +9,9 @@ int main() {
     int num_col = 10;
     double scale_for_line = 0.9;
     double scale_for_offset = (1 - scale_for_line) / 2;
+
+    std::vector<std::vector<mrs_grid::Grid
+    >> grids;
 
     sf::RenderWindow window(sf::VideoMode(width, height),
                             "Mutli-Agent-Simulator",
