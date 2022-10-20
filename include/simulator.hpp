@@ -27,7 +27,6 @@ private:
     static const sf::Time TimePerFrame;
 
     sf::RenderWindow mWindow;
-    World mWorld;
 
     sf::Font mFont;
     sf::Text mStatisticsText;

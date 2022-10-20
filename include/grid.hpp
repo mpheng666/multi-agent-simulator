@@ -1,22 +1,19 @@
-#ifndef MRS_GRID_HPP_
-#define MRS_GRID_HPP_
+#ifndef MAS_GRID_HPP_
+#define MAS_GRID_HPP_
 
+#include "SFML/Graphics.hpp"
 #include <vector>
 
-namespace mrs_grid {
-class Grid {
+namespace mas_grid {
+class Grid : public sf::RectangleShape {
 public:
     Grid(const double cost = 1.0) : cost_(cost) {}
 
-    // double getWidth() const { return width_; }
-    // double getHeight() const { return height_; }
     double getCost() const { return cost_; }
 
 private:
-    // double width_{0.0};
-    // double height_{0.0};
     double cost_{0};
 };
-} // namespace mrs_grid
+} // namespace mas_grid
 
 #endif
