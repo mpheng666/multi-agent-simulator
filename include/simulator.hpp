@@ -1,5 +1,5 @@
-#ifndef MULTI_AGENT_SIMULATOR_SIMULATOR_HPP_
-#define MULTI_AGENT_SIMULATOR_SIMULATOR_HPP_
+#ifndef MAS_SIMULATOR_HPP_
+#define MAS_SIMULATOR_HPP_
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Font.hpp>
@@ -9,30 +9,22 @@
 #include <SFML/System/Time.hpp>
 #include <SFML/Window/Keyboard.hpp>
 
-namespace simulator {
-class Simulator : private sf::NonCopyable {
-public:
-    Simulator();
-    void run();
-    void update();
+namespace mas_simulator {
+    class Simulator {
+    public:
+        Simulator();
+        void run();
+        void update();
 
-private:
-    void processEvents();
-    void update(sf::Time elapsedTime);
-    void render();
+    private:
+        void processEvents();
 
-    void updateStatistics(sf::Time elapsedTime);
-    void handlePlayerInput(sf::Keyboard::Key key, bool isPressed);
+        void handlePlayerInput(sf::Keyboard::Key key, bool isPressed);
 
-    static const sf::Time TimePerFrame;
+        static const sf::Time TimePerFrame;
 
-    sf::RenderWindow mWindow;
-
-    sf::Font mFont;
-    sf::Text mStatisticsText;
-    sf::Time mStatisticsUpdateTime;
-    std::size_t mStatisticsNumFrames;
-};
-} // namespace simulator
+        sf::RenderWindow window_;
+    };
+} // namespace mas_simulator
 
 #endif

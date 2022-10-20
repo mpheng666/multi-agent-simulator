@@ -5,15 +5,21 @@
 #include <vector>
 
 namespace mas_map {
-class Map {
-public:
-    Map(const std::vector<std::vector<mas_grid::Grid>> &grids) : map_(grids) {}
+    class Map {
+    public:
+        Map(const std::vector<std::vector<mas_grid::Grid>>& grids)
+            : map_(grids)
+        {
+        }
 
-    std::vector<std::vector<mas_grid::Grid>> getMap() const { return map_; }
+        std::vector<std::vector<mas_grid::Grid>> getMap() const { return map_; }
 
-private:
-    std::vector<std::vector<mas_grid::Grid>> map_;
-};
+        std::size_t getColumnSize() { return map_.size(); }
+        std::size_t getRowSize() { return map_.front().size(); }
+
+    private:
+        std::vector<std::vector<mas_grid::Grid>> map_;
+    };
 } // namespace mas_map
 
 #endif
