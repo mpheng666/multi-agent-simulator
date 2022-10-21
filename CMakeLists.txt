@@ -10,5 +10,5 @@ find_package(SFML 2.5 COMPONENTS graphics REQUIRED)
 
 include_directories(include)
 
-add_executable(multi_robot_simulator src/main.cpp)
+add_executable(multi_robot_simulator src/simulator/simulator.cpp src/main.cpp)
 target_link_libraries(multi_robot_simulator sfml-graphics)
