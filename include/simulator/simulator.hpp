@@ -9,7 +9,10 @@
 #include <SFML/System/Time.hpp>
 #include <SFML/Window/Keyboard.hpp>
 
+#include "object/object_base.hpp"
+#include "path_finding/dfs.hpp"
 #include "simulator/map.hpp"
+
 #include <boost/range/adaptors.hpp>
 
 namespace mas_simulator {
@@ -28,8 +31,11 @@ namespace mas_simulator {
         mas_map::Map map_;
         float grid_w_{0.0f};
         float grid_h_{0.0f};
+        mas_object::MASObject agent_;
+        mas_dfs::MASDFS mas_path_finding_;
 
-        void initialize_map_();
+        void initialize_map();
+        void initialize_objects();
 
         void processEvents();
         void handlePlayerInput(sf::Keyboard::Key key, bool isPressed);

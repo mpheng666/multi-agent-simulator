@@ -17,7 +17,8 @@ Simulator::Simulator(const int window_width,
 
 void Simulator::run()
 {
-    initialize_map_();
+    initialize_map();
+    initialize_objects();
     rwindow_.setFramerateLimit(60);
 
     while (rwindow_.isOpen()) {
@@ -40,11 +41,14 @@ void Simulator::run()
                 rwindow_.draw(map_.grid_map.at(i).at(j));
             }
         }
+
+        rwindow_.draw(agent_);
+        
         rwindow_.display();
     }
 }
 
-void Simulator::initialize_map_()
+void Simulator::initialize_map()
 {
     grid_w_ = rwindow_.getSize().x / map_.getColumnSize();
     grid_h_ = rwindow_.getSize().y / map_.getRowSize();
@@ -54,7 +58,14 @@ void Simulator::initialize_map_()
             map_.grid_map.at(i).at(j).setSize(sf::Vector2f(grid_w_, grid_h_));
             map_.grid_map.at(i).at(j).setFillColor(sf::Color::White);
             map_.grid_map.at(i).at(j).setOutlineColor(sf::Color::Black);
-            map_.grid_map.at(i).at(j).setOutlineThickness(2.0f);
+            map_.grid_map.at(i).at(j).setOutlineThickness(1.0f);
         }
     }
+}
+
+void Simulator::initialize_objects()
+{
+    agent_.setSize(sf::Vector2f(grid_w_, grid_h_));
+    agent_.setFillColor(sf::Color::Red);
+    agent_.setPosition(sf::Vector2f(50, 50));
 }
