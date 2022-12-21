@@ -20,6 +20,7 @@ void Simulator::run()
     initialize_map();
     initialize_objects();
     rwindow_.setFramerateLimit(60);
+    mas_path_finding_.start(map_, 10, 10, 50, 60, grid_w_, grid_h_);
 
     while (rwindow_.isOpen()) {
 
@@ -33,6 +34,8 @@ void Simulator::run()
 
         rwindow_.clear(sf::Color::Black);
 
+
+        // Rendering
         for (auto i = 0; i < map_.getColumnSize(); ++i) {
             for (auto j = 0; j < map_.getRowSize(); ++j) {
                 float position_x = i * grid_w_;

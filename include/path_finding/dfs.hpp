@@ -11,9 +11,17 @@ namespace mas_dfs {
         ~MASDFS() {}
 
         std::vector<mas_grid::Grid>
-        start(mas_map::Map& map, mas_grid::Grid start, mas_grid::Grid end)
+        start(mas_map::Map& map, int start_x, int start_y, int end_x, int end_y, int grid_w, int grid_h)
         {
-
+            std::cout << "START DFS!\n";
+            bool found_path{false};
+            mas_grid::Grid start_grid;
+            mas_grid::Grid end_grid;
+            start_grid.setSize(sf::Vector2f(grid_w, grid_h));
+            end_grid.setSize(sf::Vector2f(grid_w, grid_h));
+            start_grid.setPosition(start_x, start_y);
+            end_grid.setPosition(end_x, end_y);
+            startDFS(map, start_grid, end_grid, found_path);
             return path_result_;
         }
 
@@ -86,6 +94,7 @@ namespace mas_dfs {
 
             // std::cout << "pop: " << start.x_ << " " << start.getPosition().y << '\n';
             path_stack_.pop();
+            return true;
         }
 
         std::vector<mas_grid::Grid> path_result_;
