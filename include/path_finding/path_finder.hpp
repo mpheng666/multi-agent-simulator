@@ -1,22 +1,22 @@
 #ifndef MAS_PATH_FINDER_HPP_
 #define MAS_PATH_FINDER_HPP_
 
+#include "core/point2D.hpp"
+
 #include <iostream>
 #include <vector>
 
-namespace mas_path_finder
-{
+using namespace mas;
+namespace path_finder {
+
     class MASPathFinder {
         public:
-            MASPathFinder()
-            {
-
-            }
+            MASPathFinder() = default;
 
             ~MASPathFinder() = default;
 
-            virtual doSearch() = 0;
+            virtual bool doSearch() = 0;
     };
-}
+} // namespace mas
 
 #endif
