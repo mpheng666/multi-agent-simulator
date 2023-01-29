@@ -10,10 +10,10 @@
 #include <SFML/Window/Keyboard.hpp>
 
 #include "object/object_base.hpp"
-#include "path_finding/dfs.hpp"
+// #include "path_finding/dfs.hpp"
 #include "simulator/map.hpp"
 
-#include <boost/range/adaptors.hpp>
+#include "core/time.hpp"
 
 namespace mas_simulator {
     class Simulator {
@@ -32,9 +32,11 @@ namespace mas_simulator {
         float grid_w_{0.0f};
         float grid_h_{0.0f};
         mas_object::MASObject agent_;
-        mas_dfs::MASDFS mas_path_finding_;
+        // mas_dfs::MASDFS mas_path_finding_;
         float width_step_{0.0f};
         float height_step_{0.0f};
+
+        mas::TimeHandler time_handler{60.0};
 
         void initialize_map();
         void initialize_objects(mas_object::MASObject& object);

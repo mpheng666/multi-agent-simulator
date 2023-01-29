@@ -4,7 +4,7 @@
 #include "SFML/Graphics.hpp"
 #include <vector>
 
-namespace mas_grid {
+namespace mas {
 class Grid : public sf::RectangleShape {
 public:
     Grid(const double cost = 1.0) : cost_(cost) {}

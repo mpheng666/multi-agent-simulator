@@ -2,38 +2,72 @@
 #define MAS_MAP_HPP_
 
 #include "simulator/grid.hpp"
-#include <vector>
 #include <iostream>
+#include <vector>
 
 namespace mas_map {
     class Map {
     public:
-        Map(const std::vector<std::vector<mas_grid::Grid>>& grids)
-            : grid_map(grids)
+        Map(const unsigned int width,
+            const unsigned int height,
+            const unsigned int col,
+            const unsigned int row,
+            sf::RenderWindow& rw)
+            : width_(width)
+            , height_(height)
+            , col_num_(col)
+            , row_num_(row)
+            , rw_(rw)
         {
+            step_size_ = width_ / col_num_;
+            grids_.resize(col_num_, std::vector<mas::Grid>(row_num_));
+            initializeMap();
         }
 
-        Map(const int col, const int row)
-            : col_(col)
-            , row_(row)
+        std::size_t getColumnSize() const { return grids_.size(); }
+
+        std::size_t getRowSize() const { return grids_.front().size(); }
+
+        void renderMap()
         {
-            try
-            {
-                grid_map.resize(col_, std::vector<mas_grid::Grid>(row_));
-            }
-            catch(const std::exception& e)
-            {
-                std::cerr << e.what() << '\n';
+            for (auto i = 0; i < col_num_; ++i) {
+                for (auto j = 0; j < row_num_; ++j) {
+                    float position_x = i * step_size_;
+                    float position_y = j * step_size_;
+                    grids_.at(i).at(j).setPosition(position_x, position_y);
+                    grids_.at(i).at(j).setFillColor(sf::Color::White);
+                    rw_.draw(grids_.at(i).at(j));
+                }
             }
         }
 
-        std::size_t getColumnSize() const { return grid_map.size(); }
-        std::size_t getRowSize() const { return grid_map.front().size(); }
-        std::vector<std::vector<mas_grid::Grid>> grid_map;
+        void initializeMap()
+        {
+            for (auto i = 0; i < col_num_; ++i) {
+                for (auto j = 0; j < row_num_; ++j) {
+                    float position_x = i * step_size_;
+                    float position_y = j * step_size_;
+                    grids_.at(i).at(j).setSize(sf::Vector2f(step_size_, step_size_));
+                    grids_.at(i).at(j).setFillColor(sf::Color::White);
+                    grids_.at(i).at(j).setOutlineColor(sf::Color::Black);
+                    grids_.at(i).at(j).setOutlineThickness(1.0f);
+                    grids_.at(i).at(j).setPosition(position_x, position_y);
+                    rw_.draw(grids_.at(i).at(j));
+                }
+            }
+        }
 
     private:
-        int col_{0};
-        int row_{0};
+        unsigned int width_{10};
+        unsigned int height_{10};
+        unsigned int col_num_{1};
+        unsigned int row_num_{1};
+
+        unsigned int step_size_{10};
+
+        sf::RenderWindow& rw_;
+
+        std::vector<std::vector<mas::Grid>> grids_{};
     };
 } // namespace mas_map
 
