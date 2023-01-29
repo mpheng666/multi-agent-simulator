@@ -1,71 +1,80 @@
 #include "simulator/simulator.hpp"
 
-using namespace mas_simulator;
+namespace mas {
 
-Simulator::Simulator(const int window_width,
-                     const int window_height,
-                     const std::string& window_name,
-                     const int window_framerate_limit,
-                     const int col,
-                     const int row)
-    : rwindow_(sf::VideoMode(window_width, window_height),
-               window_name,
-               sf::Style::Titlebar | sf::Style::Close)
-    , map_(300, 300, 10, 10, rwindow_)
-    , width_step_(window_width / col)
-    , height_step_(window_height / row)
-{
-}
-
-void Simulator::run()
-{
-    initialize_objects(agent_);
-    rwindow_.setFramerateLimit(60);
-    // mas_path_finding_.start(map_, 10, 10, 50, 60, grid_w_, grid_h_);
-
-    while (rwindow_.isOpen()) {
-        sf::Event event;
-        while (rwindow_.pollEvent(event)) {
-            switch (event.type) {
-                case sf::Event::Closed:
-                    rwindow_.close();
-                    break;
-                case sf::Event::KeyPressed:
-                    switch (event.key.code) {
-                        case sf::Keyboard::Up: {
-                            const sf::Vector2f offset(0, -height_step_);
-                            agent_.move(offset);
-                        } break;
-                        case sf::Keyboard::Down: {
-                            const sf::Vector2f offset(0, height_step_);
-                            agent_.move(offset);
-                        } break;
-                        case sf::Keyboard::Left: {
-                            const sf::Vector2f offset(-width_step_, 0);
-                            agent_.move(offset);
-                        } break;
-                        case sf::Keyboard::Right: {
-                            const sf::Vector2f offset(width_step_, 0);
-                            agent_.move(offset);
-                        } break;
-                        default:
-                            break;
-                    }
-                default:
-                    break;
-            }
-        }
-
-        map_.renderMap();
-        rwindow_.draw(agent_);
-        rwindow_.display();
-        rwindow_.clear();
+    Simulator::Simulator(const int window_width,
+                         const int window_height,
+                         const std::string& window_name,
+                         const int window_framerate_limit)
+        : rwindow_(sf::VideoMode(window_width, window_height),
+                   window_name,
+                   sf::Style::Titlebar | sf::Style::Close)
+        , map_(400, 400, 20, 20, window_width / 2.0f, window_height / 2.0f, rwindow_)
+    {
+        // agent_.setSize(sf::Vector2f(map_.getColumnSize(), map_.getRowSize()));
+        agent_.setPosition(sf::Vector2f(50, 50));
     }
-}
 
-void Simulator::initialize_objects(mas_object::MASObject& object)
-{
-    object.setSize(sf::Vector2f(grid_w_, grid_h_));
-    object.setFillColor(sf::Color::Red);
-    object.setPosition(sf::Vector2f(50, 50));
-}
+    void Simulator::run()
+    {
+        rwindow_.setFramerateLimit(60);
+
+        while (rwindow_.isOpen()) {
+            sf::Event event;
+            while (rwindow_.pollEvent(event)) {
+                switch (event.type) {
+                    case sf::Event::Closed:
+                        rwindow_.close();
+                        break;
+                    case sf::Event::KeyPressed:
+                        switch (event.key.code) {
+                            case sf::Keyboard::Up: {
+                                const sf::Vector2f offset(0, agent_.getSize().y);
+                                if (agent_.getRotation() == 0) {
+                                    agent_.move(-offset);
+                                }
+                                else {
+                                    agent_.setRotation(0);
+                                }
+                            } break;
+                            case sf::Keyboard::Down: {
+                                const sf::Vector2f offset(0, agent_.getSize().y);
+                                if (agent_.getRotation() == 180) {
+                                    agent_.move(offset);
+                                }
+                                else {
+                                    agent_.setRotation(180);
+                                }
+                            } break;
+                            case sf::Keyboard::Left: {
+                                const sf::Vector2f offset(agent_.getSize().x, 0);
+                                if (agent_.getRotation() == 270) {
+                                    agent_.move(-offset);
+                                }
+                                else {
+                                    agent_.setRotation(270);
+                                }
+                            } break;
+                            case sf::Keyboard::Right: {
+                                const sf::Vector2f offset(agent_.getSize().x, 0);
+                                if (agent_.getRotation() == 90) {
+                                    agent_.move(offset);
+                                }
+                                else {
+                                    agent_.setRotation(90);
+                                }
+                            } break;
+                            default:
+                                break;
+                        }
+                    default:
+                        break;
+                }
+            }
+            map_.renderMap();
+            rwindow_.draw(agent_);
+            rwindow_.display();
+            rwindow_.clear();
+        }
+    }
+} // namespace mas

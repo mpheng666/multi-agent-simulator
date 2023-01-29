@@ -13,13 +13,11 @@ namespace mas{
 
             }
 
-            unsigned int width_ {10};
-            unsigned int height_ {10};
+
             std::string name_{"MAS"};
 
             unsigned int col_num {10};
             unsigned int row_num {10};
-            unsigned int w_step_ {1};
 
         private:
             sf::RenderWindow rwindow_;

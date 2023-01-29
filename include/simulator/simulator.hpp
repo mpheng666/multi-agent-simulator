@@ -9,41 +9,33 @@
 #include <SFML/System/Time.hpp>
 #include <SFML/Window/Keyboard.hpp>
 
-#include "object/object_base.hpp"
-// #include "path_finding/dfs.hpp"
-#include "simulator/map.hpp"
+#include "core/agent.hpp"
+#include "core/object.hpp"
 
+// #include "path_finding/dfs.hpp"
+#include "core/map.hpp"
 #include "core/time.hpp"
 
-namespace mas_simulator {
+namespace mas {
     class Simulator {
     public:
         Simulator(const int window_width,
                   const int window_height,
                   const std::string& window_name,
-                  const int window_framerate_limit,
-                  const int col,
-                  const int row);
+                  const int window_framerate_limit);
         void run();
 
     private:
         sf::RenderWindow rwindow_;
-        mas_map::Map map_;
-        float grid_w_{0.0f};
-        float grid_h_{0.0f};
-        mas_object::MASObject agent_;
-        // mas_dfs::MASDFS mas_path_finding_;
-        float width_step_{0.0f};
-        float height_step_{0.0f};
+        Map map_;
 
-        mas::TimeHandler time_handler{60.0};
+        Agent agent_;
 
-        void initialize_map();
-        void initialize_objects(mas_object::MASObject& object);
+        TimeHandler time_handler{60.0};
 
         void processEvents();
         void handlePlayerInput(sf::Keyboard::Key key, bool isPressed);
     };
-} // namespace mas_simulator
+} // namespace mas
 
 #endif

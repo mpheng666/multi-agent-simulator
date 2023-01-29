@@ -1,7 +1,7 @@
 #ifndef MAS_PATH_FINDING_DFS_HPP_
 #define MAS_PATH_FINDING_DFS_HPP_
 
-#include "simulator/map.hpp"
+#include "core/map.hpp"
 #include <stack>
 
 namespace mas_dfs {

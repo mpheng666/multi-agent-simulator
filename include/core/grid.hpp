@@ -1,5 +1,5 @@
-#ifndef MAS_GRID_HPP_
-#define MAS_GRID_HPP_
+#ifndef MAS_CORE_GRID_HPP_
+#define MAS_CORE_GRID_HPP_
 
 #include "SFML/Graphics.hpp"
 #include <vector>
