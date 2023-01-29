@@ -4,17 +4,19 @@
 #include "SFML/Graphics.hpp"
 
 namespace mas {
-    class Agent : public sf::Sprite {
+    class Agent : public sf::RectangleShape {
     public:
-        Agent()
+        Agent(const int step_size)
         {
             texture_.loadFromFile("/home/mpheng/workspace/mas_ws/multi-agent-simulator/"
-                                  "images/agent_lizard.png");
-            setTexture(texture_);
-            setOrigin(texture_.getSize().x / 2.0f, texture_.getSize().y / 2.0f);
+                                  "images/agent_bug.png");
+            setTexture(&texture_, true);
+            setPosition(sf::Vector2f(step_size / 2.0f, step_size / 2.0f));
+            setSize(sf::Vector2f(step_size, step_size));
+            setOrigin(step_size / 2.0f, step_size / 2.0f);
         }
 
-        sf::Vector2u getSize() { return texture_.getSize(); }
+        // sf::Vector2f getSize() { return texture_.getSize(); }
 
     private:
         sf::Texture texture_;

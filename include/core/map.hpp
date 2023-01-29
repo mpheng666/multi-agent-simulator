@@ -34,6 +34,11 @@ namespace mas {
 
         std::size_t getRowSize() const { return grids_.front().size(); }
 
+        float getStepSize() const
+        {
+            return step_size_;
+        }
+
         void renderMap()
         {
             for (auto i = 0; i < col_num_; ++i) {

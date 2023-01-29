@@ -9,10 +9,9 @@ namespace mas {
         : rwindow_(sf::VideoMode(window_width, window_height),
                    window_name,
                    sf::Style::Titlebar | sf::Style::Close)
-        , map_(400, 400, 20, 20, window_width / 2.0f, window_height / 2.0f, rwindow_)
+        , map_(1000, 600, 20, 12, window_width / 2.0f, window_height / 2.0f, rwindow_)
+        , agent_(map_.getStepSize())
     {
-        // agent_.setSize(sf::Vector2f(map_.getColumnSize(), map_.getRowSize()));
-        agent_.setPosition(sf::Vector2f(50, 50));
     }
 
     void Simulator::run()
@@ -74,7 +73,7 @@ namespace mas {
             map_.renderMap();
             rwindow_.draw(agent_);
             rwindow_.display();
-            rwindow_.clear();
+            rwindow_.clear(sf::Color::Black);
         }
     }
 } // namespace mas
