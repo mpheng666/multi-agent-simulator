@@ -9,9 +9,11 @@ namespace mas {
         : rwindow_(sf::VideoMode(window_width, window_height),
                    window_name,
                    sf::Style::Titlebar | sf::Style::Close)
-        , map_(1000, 600, 20, 12, window_width / 2.0f, window_height / 2.0f, rwindow_)
-        , agent_(map_.getStepSize())
+        , map_(1000, 600, 10, 6, window_width / 2.0f, window_height / 2.0f, rwindow_)
+        , agent_(map_.getStepSize(), map_)
     {
+        map_.spawnObstacles(10);
+        agent_.updateMapObstacles(map_.getObstacles());
     }
 
     void Simulator::run()
@@ -26,46 +28,7 @@ namespace mas {
                         rwindow_.close();
                         break;
                     case sf::Event::KeyPressed:
-                        switch (event.key.code) {
-                            case sf::Keyboard::Up: {
-                                const sf::Vector2f offset(0, agent_.getSize().y);
-                                if (agent_.getRotation() == 0) {
-                                    agent_.move(-offset);
-                                }
-                                else {
-                                    agent_.setRotation(0);
-                                }
-                            } break;
-                            case sf::Keyboard::Down: {
-                                const sf::Vector2f offset(0, agent_.getSize().y);
-                                if (agent_.getRotation() == 180) {
-                                    agent_.move(offset);
-                                }
-                                else {
-                                    agent_.setRotation(180);
-                                }
-                            } break;
-                            case sf::Keyboard::Left: {
-                                const sf::Vector2f offset(agent_.getSize().x, 0);
-                                if (agent_.getRotation() == 270) {
-                                    agent_.move(-offset);
-                                }
-                                else {
-                                    agent_.setRotation(270);
-                                }
-                            } break;
-                            case sf::Keyboard::Right: {
-                                const sf::Vector2f offset(agent_.getSize().x, 0);
-                                if (agent_.getRotation() == 90) {
-                                    agent_.move(offset);
-                                }
-                                else {
-                                    agent_.setRotation(90);
-                                }
-                            } break;
-                            default:
-                                break;
-                        }
+                        agent_.processKeyPressed(event);
                     default:
                         break;
                 }

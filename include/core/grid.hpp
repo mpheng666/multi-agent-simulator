@@ -16,7 +16,7 @@ namespace mas {
 
     private:
         double cost_{0};
-        // sf::Texture texture_;
+        sf::Texture texture_;
     };
 } // namespace mas
 

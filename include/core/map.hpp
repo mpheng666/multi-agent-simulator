@@ -3,8 +3,8 @@
 
 #include "core/grid.hpp"
 #include <iostream>
+#include <random>
 #include <vector>
-
 namespace mas {
     class Map {
     public:
@@ -34,10 +34,7 @@ namespace mas {
 
         std::size_t getRowSize() const { return grids_.front().size(); }
 
-        float getStepSize() const
-        {
-            return step_size_;
-        }
+        float getStepSize() const { return step_size_; }
 
         void renderMap()
         {
@@ -46,7 +43,7 @@ namespace mas {
                     float position_x = -origin_x_ + offset_x_ + i * step_size_;
                     float position_y = -origin_y_ + offset_y_ + j * step_size_;
                     grids_.at(i).at(j).setPosition(position_x, position_y);
-                    grids_.at(i).at(j).setFillColor(sf::Color::White);
+                    // grids_.at(i).at(j).setFillColor(sf::Color::White);
                     rw_.draw(grids_.at(i).at(j));
                 }
             }
@@ -68,6 +65,32 @@ namespace mas {
             }
         }
 
+        void spawnObstacles(const unsigned int num)
+        {
+            std::random_device rd;
+            std::uniform_int_distribution<unsigned int> d_col(1, col_num_ - 1);
+            std::uniform_int_distribution<unsigned int> d_row(1, row_num_ - 1);
+            for (int i = 0; i < num; ++i) {
+                unsigned int obstable_x = d_col(rd);
+                unsigned int obstable_y = d_row(rd);
+                grids_.at(obstable_x).at(obstable_y).setFillColor(sf::Color::Red);
+                obstacles_.emplace_back(sf::Vector2u{obstable_x, obstable_y});
+            }
+
+            // for(const auto& obstacle : obstacles_)
+            // {
+            //     std::cout << "obstacle: " << obstacle.x << "," << obstacle.y << " ";
+            // }
+            // std::cout << "\n";
+        }
+
+        std::vector<sf::Vector2u> getObstacles() const { return obstacles_; }
+
+        void setObstacles(const std::vector<sf::Vector2u>& new_obstacles)
+        {
+            obstacles_ = new_obstacles;
+        }
+
     private:
         unsigned int width_{10};
         unsigned int height_{10};
@@ -82,6 +105,7 @@ namespace mas {
         sf::RenderWindow& rw_;
 
         std::vector<std::vector<Grid>> grids_{};
+        std::vector<sf::Vector2u> obstacles_;
     };
 } // namespace mas
 

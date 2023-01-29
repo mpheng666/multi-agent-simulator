@@ -10,7 +10,6 @@
 #include <SFML/Window/Keyboard.hpp>
 
 #include "core/agent.hpp"
-#include "core/object.hpp"
 
 // #include "path_finding/dfs.hpp"
 #include "core/map.hpp"
@@ -34,7 +33,6 @@ namespace mas {
         TimeHandler time_handler{60.0};
 
         void processEvents();
-        void handlePlayerInput(sf::Keyboard::Key key, bool isPressed);
     };
 } // namespace mas
 
