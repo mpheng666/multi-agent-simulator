@@ -33,9 +33,11 @@ namespace mas_simulator {
         float grid_h_{0.0f};
         mas_object::MASObject agent_;
         mas_dfs::MASDFS mas_path_finding_;
+        float width_step_{0.0f};
+        float height_step_{0.0f};
 
         void initialize_map();
-        void initialize_objects();
+        void initialize_objects(mas_object::MASObject& object);
 
         void processEvents();
         void handlePlayerInput(sf::Keyboard::Key key, bool isPressed);

@@ -12,28 +12,53 @@ Simulator::Simulator(const int window_width,
                window_name,
                sf::Style::Titlebar | sf::Style::Close)
     , map_(col, row)
+    , width_step_(window_width / col)
+    , height_step_(window_height / row)
 {
 }
 
 void Simulator::run()
 {
     initialize_map();
-    initialize_objects();
+    initialize_objects(agent_);
     rwindow_.setFramerateLimit(60);
-    mas_path_finding_.start(map_, 10, 10, 50, 60, grid_w_, grid_h_);
+    // mas_path_finding_.start(map_, 10, 10, 50, 60, grid_w_, grid_h_);
 
     while (rwindow_.isOpen()) {
 
         sf::Event event;
         while (rwindow_.pollEvent(event)) {
-
-            if (event.type == sf::Event::Closed) {
-                rwindow_.close();
+            switch (event.type) {
+                case sf::Event::Closed:
+                    rwindow_.close();
+                    break;
+                case sf::Event::KeyPressed:
+                    switch (event.key.code) {
+                        case sf::Keyboard::Up: {
+                            const sf::Vector2f offset(0, -height_step_);
+                            agent_.move(offset);
+                        } break;
+                        case sf::Keyboard::Down: {
+                            const sf::Vector2f offset(0, height_step_);
+                            agent_.move(offset);
+                        } break;
+                        case sf::Keyboard::Left: {
+                            const sf::Vector2f offset(-width_step_, 0);
+                            agent_.move(offset);
+                        } break;
+                        case sf::Keyboard::Right: {
+                            const sf::Vector2f offset(width_step_, 0);
+                            agent_.move(offset);
+                        } break;
+                        default:
+                            break;
+                    }
+                default:
+                    break;
             }
         }
 
         rwindow_.clear(sf::Color::Black);
-
 
         // Rendering
         for (auto i = 0; i < map_.getColumnSize(); ++i) {
@@ -46,7 +71,7 @@ void Simulator::run()
         }
 
         rwindow_.draw(agent_);
-        
+
         rwindow_.display();
     }
 }
@@ -66,9 +91,9 @@ void Simulator::initialize_map()
     }
 }
 
-void Simulator::initialize_objects()
+void Simulator::initialize_objects(mas_object::MASObject& object)
 {
-    agent_.setSize(sf::Vector2f(grid_w_, grid_h_));
-    agent_.setFillColor(sf::Color::Red);
-    agent_.setPosition(sf::Vector2f(50, 50));
+    object.setSize(sf::Vector2f(grid_w_, grid_h_));
+    object.setFillColor(sf::Color::Red);
+    object.setPosition(sf::Vector2f(50, 50));
 }
