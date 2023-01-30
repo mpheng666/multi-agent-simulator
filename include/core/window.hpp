@@ -13,7 +13,6 @@ namespace mas{
 
             }
 
-
             std::string name_{"MAS"};
 
             unsigned int col_num {10};

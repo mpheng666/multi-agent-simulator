@@ -9,11 +9,11 @@ namespace mas {
         : rwindow_(sf::VideoMode(window_width, window_height),
                    window_name,
                    sf::Style::Titlebar | sf::Style::Close)
-        , map_(1000, 600, 10, 6, window_width / 2.0f, window_height / 2.0f, rwindow_)
-        , agent_(map_.getStepSize(), map_)
+        , map_(1000, 600, 50, window_width / 2.0f, window_height / 2.0f, rwindow_)
+        , agent_(map_.getStepSize(), rwindow_)
     {
         map_.spawnObstacles(10);
-        agent_.updateMapObstacles(map_.getObstacles());
+        agent_.internal_map_.addObstacles(map_.getObstacles());
     }
 
     void Simulator::run()
