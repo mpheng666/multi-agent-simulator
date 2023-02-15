@@ -69,7 +69,7 @@ public:
           if (getRotation() != 0) {
             setRotation(0);
           }
-          else if (!isCollide(next_index)) {
+          else if (!isCollide(next_index) && !isOutOfBound(next_index)) {
             const sf::Vector2f offset(0, getSize().y);
             move(-offset);
           }
@@ -81,7 +81,7 @@ public:
           if (getRotation() != 270) {
             setRotation(270);
           }
-          else if (!isCollide(next_index)) {
+          else if (!isCollide(next_index) && !isOutOfBound(next_index)) {
             const sf::Vector2f offset(getSize().x, 0);
             move(-offset);
           }
@@ -93,7 +93,7 @@ public:
           if (getRotation() != 180) {
             setRotation(180);
           }
-          else if (!isCollide(next_index)) {
+          else if (!isCollide(next_index) && !isOutOfBound(next_index)) {
             const sf::Vector2f offset(0, getSize().y);
             move(offset);
           }
@@ -105,7 +105,7 @@ public:
           if (getRotation() != 90) {
             setRotation(90);
           }
-          else if (!isCollide(next_index)) {
+          else if (!isCollide(next_index) && !isOutOfBound(next_index)) {
             const sf::Vector2f offset(getSize().x, 0);
             move(offset);
           }
@@ -140,6 +140,19 @@ private:
         if (obstacle.front() == next_index.front())
           if (obstacle.back() == next_index.back())
             return true;
+      }
+      return false;
+    }
+
+    bool isOutOfBound(const Index& next_index)
+    {
+      std::cout << "map size x: " << internal_map_.getColumnSize() << "\n";
+      std::cout << "map size y: " << internal_map_.getRowSize() << "\n";
+      if (next_index.front() >= internal_map_.getColumnSize()) {
+        return true;
+      }
+      else if (next_index.back() >= internal_map_.getRowSize()) {
+        return true;
       }
       return false;
     }
