@@ -33,6 +33,7 @@ namespace mas {
         TimeHandler time_handler{60.0};
 
         void processEvents();
+        void renderMap();
     };
 } // namespace mas
 

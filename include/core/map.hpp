@@ -10,43 +10,23 @@
 namespace mas {
     class Map {
     public:
-        Map(sf::RenderWindow& rw)
-            : rw_(rw)
-        {
-            initialiseMap();
-        }
-
         Map(const unsigned int width,
             const unsigned int height,
             const unsigned int step_size,
             const float offset_x,
-            const float offset_y,
-            sf::RenderWindow& rw)
+            const float offset_y)
             : width_(width)
             , height_(height)
             , step_size_(step_size)
             , offset_x_(offset_x)
             , offset_y_(offset_y)
-            , rw_(rw)
-
         {
             initialiseMap();
         }
 
-        std::size_t getColumnSize() const { return col_num_; }
-        std::size_t getRowSize() const { return row_num_; }
+        std::size_t getColumnSize() const { return grids_.size(); }
+        std::size_t getRowSize() const { return grids_.at(0).size(); }
         float getStepSize() const { return step_size_; }
-
-        void renderMap()
-        {
-            for (auto i = 0; i < col_num_; ++i) {
-                for (auto j = 0; j < row_num_; ++j) {
-                    float position_x = -origin_x_ + offset_x_ + i * step_size_;
-                    float position_y = -origin_y_ + offset_y_ + j * step_size_;
-                    rw_.draw(grids_.at(i).at(j));
-                }
-            }
-        }
 
         void initialiseMap()
         {
@@ -83,11 +63,11 @@ namespace mas {
                 grids_.at(obstacle_x).at(obstacle_y).setFillColor(sf::Color::Red);
                 obstacles_.insert({obstacle_x, obstacle_y});
             }
-            for (const auto& obstacle : obstacles_) {
-                std::cout << "obstacle: " << obstacle.front() << "," << obstacle.back()
-                          << " ";
-            }
-            std::cout << "\n";
+            // for (const auto& obstacle : obstacles_) {
+            //     std::cout << "obstacle: " << obstacle.front() << "," << obstacle.back()
+            //               << " ";
+            // }
+            // std::cout << "\n";
         }
 
         std::set<Index> getObstacles() const { return obstacles_; }
@@ -101,21 +81,30 @@ namespace mas {
             }
         }
 
-    private:
-        unsigned int width_{10};
-        unsigned int height_{10};
-        unsigned int step_size_{10};
-        unsigned int col_num_{width_ / step_size_};
-        unsigned int row_num_{height_ / step_size_};
+        std::vector<std::vector<Grid>> getGrids() const { return grids_; }
+
+        void setGrids(const std::vector<std::vector<Grid>>& grids) { grids_ = grids; }
+
+        void setPath(const std::vector<Grid>& path_grids)
+        {
+            for(const auto& grid : path_grids)
+            {
+                grids_.at(grid.index_.front()).at(grid.index_.back()).setFillColor(sf::Color::Green);
+            }
+        }
+
         float offset_x_{0.0f};
         float offset_y_{0.0f};
         float origin_x_{width_ / 2.0f};
         float origin_y_{height_ / 2.0f};
-
-        sf::RenderWindow& rw_;
+        unsigned int step_size_{10};
+    private:
+        unsigned int width_{10};
+        unsigned int height_{10};
+        unsigned int col_num_{width_ / step_size_};
+        unsigned int row_num_{height_ / step_size_};
 
         std::vector<std::vector<Grid>> grids_{};
-        // Index empty_index{};
         std::set<Index> obstacles_;
     };
 } // namespace mas

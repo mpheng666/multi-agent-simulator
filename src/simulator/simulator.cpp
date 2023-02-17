@@ -9,31 +9,54 @@ namespace mas {
         : rwindow_(sf::VideoMode(window_width, window_height),
                    window_name,
                    sf::Style::Titlebar | sf::Style::Close)
-        , map_(1000, 600, 50, window_width / 2.0f, window_height / 2.0f, rwindow_)
-        , agent_(map_.getStepSize(), rwindow_)
+        , map_(1000, 600, 50, window_width / 2.0f, window_height / 2.0f)
+        , agent_(map_.getStepSize(), map_)
     {
-        map_.spawnObstacles(10);
+        map_.spawnObstacles(1);
         agent_.internal_map_.addObstacles(map_.getObstacles());
+        agent_.internal_map_.setGrids(map_.getGrids());
+    }
+
+    void Simulator::renderMap()
+    {
+        for (auto i = 0; i < map_.getColumnSize(); ++i) {
+            for (auto j = 0; j < map_.getRowSize(); ++j) {
+                float position_x = -map_.origin_x_ + map_.offset_x_ + i * map_.step_size_;
+                float position_y = -map_.origin_y_ + map_.offset_y_ + j * map_.step_size_;
+                rwindow_.draw(map_.getGrids().at(i).at(j));
+            }
+        }
+    }
+
+    void Simulator::processEvents()
+    {
+        sf::Event event;
+        while (rwindow_.pollEvent(event)) {
+            switch (event.type) {
+                case sf::Event::Closed:
+                    rwindow_.close();
+                    break;
+                case sf::Event::KeyPressed:
+                    agent_.processKeyPressed(event);
+                default:
+                    break;
+            }
+        }
     }
 
     void Simulator::run()
     {
         rwindow_.setFramerateLimit(60);
-
+        Grid goal;
+        goal.index_.front() = 2;
+        goal.index_.back() = 2;
+        agent_.setGoal(goal);
+        agent_.searchPath();
+        auto path = agent_.getFoundPath();
+        map_.setPath(path);
         while (rwindow_.isOpen()) {
-            sf::Event event;
-            while (rwindow_.pollEvent(event)) {
-                switch (event.type) {
-                    case sf::Event::Closed:
-                        rwindow_.close();
-                        break;
-                    case sf::Event::KeyPressed:
-                        agent_.processKeyPressed(event);
-                    default:
-                        break;
-                }
-            }
-            map_.renderMap();
+            processEvents();
+            renderMap();
             rwindow_.draw(agent_);
             rwindow_.display();
             rwindow_.clear(sf::Color::Black);
