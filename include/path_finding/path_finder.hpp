@@ -21,14 +21,13 @@ namespace mas {
         {
             std::vector<Grid> neighbours{};
             for (const auto& direction : CardinalStep::steps) {
-                Grid neighbour{};
-                neighbour.index_.front() =
-                current_grid.index_.front() + direction.front();
-                neighbour.index_.back() = current_grid.index_.back() + direction.back();
-                if (neighbour.index_.front() < map_.getColumnSize() &&
-                    neighbour.index_.back() < map_.getRowSize() && neighbour.space_state_ != SpaceState::OCCUPIED) {
-                    std::cout << "neighbour: " << neighbour.index_.front() << " "
-                              << neighbour.index_.back() << "\n";
+                Grid neighbour(current_grid.getIndex().x + direction.front(),
+                               current_grid.getIndex().y + direction.back());
+                if (neighbour.getIndex().x < map_.getColumnSize() &&
+                    neighbour.getIndex().y < map_.getRowSize() &&
+                    neighbour.space_state_ != SpaceState::OCCUPIED) {
+                    std::cout << "neighbour: " << neighbour.getIndex().x << " "
+                              << neighbour.getIndex().y << "\n";
                     neighbours.emplace_back(neighbour);
                 }
             }

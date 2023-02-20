@@ -38,7 +38,7 @@ namespace mas {
             obstacles_.clear();
             for (unsigned int i = 0; i < col_num_; ++i) {
                 for (unsigned int j = 0; j < row_num_; ++j) {
-                    grids_.at(i).at(j).index_ = {i, j};
+                    grids_.at(i).at(j).setIndex({i, j});
                     grids_.at(i).at(j).space_state_ = SpaceState::EMPTY;
                     float position_x = -origin_x_ + offset_x_ + i * step_size_;
                     float position_y = -origin_y_ + offset_y_ + j * step_size_;
@@ -61,7 +61,7 @@ namespace mas {
                 unsigned int obstacle_y = d_row(rd);
                 grids_.at(obstacle_x).at(obstacle_y).space_state_ = SpaceState::OCCUPIED;
                 grids_.at(obstacle_x).at(obstacle_y).setFillColor(sf::Color::Red);
-                obstacles_.insert({obstacle_x, obstacle_y});
+                obstacles_.insert(Index(obstacle_x, obstacle_y));
             }
             // for (const auto& obstacle : obstacles_) {
             //     std::cout << "obstacle: " << obstacle.front() << "," << obstacle.back()
@@ -89,7 +89,7 @@ namespace mas {
         {
             for(const auto& grid : path_grids)
             {
-                grids_.at(grid.index_.front()).at(grid.index_.back()).setFillColor(sf::Color::Green);
+                grids_.at(grid.getIndex().x).at(grid.getIndex().y).setFillColor(sf::Color::Green);
             }
         }
 

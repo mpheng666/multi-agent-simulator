@@ -47,8 +47,8 @@ namespace mas {
                     break;
             }
             updateCurrentIndex();
-            std::cout << "Current index: " << current_idx_.front() << ","
-                      << current_idx_.back() << "\n";
+            // std::cout << "Current index: " << current_idx_.x << ","
+            //           << current_idx_.y << "\n";
         }
 
         void initialiseAgent()
@@ -65,7 +65,7 @@ namespace mas {
         {
             switch (step_direction) {
                 case Direction::UP: {
-                    const Index next_index{current_idx_.front(), --current_idx_.back()};
+                    const Index next_index{current_idx_.x, --current_idx_.y};
                     if (getRotation() != 0) {
                         setRotation(0);
                     }
@@ -77,7 +77,7 @@ namespace mas {
                 case Direction::UP_LEFT:
                     break;
                 case Direction::LEFT: {
-                    const Index next_index{--current_idx_.front(), current_idx_.back()};
+                    const Index next_index{--current_idx_.x, current_idx_.y};
                     if (getRotation() != 270) {
                         setRotation(270);
                     }
@@ -89,7 +89,7 @@ namespace mas {
                 case Direction::DOWN_LEFT:
                     break;
                 case Direction::DOWN: {
-                    const Index next_index{current_idx_.front(), ++current_idx_.back()};
+                    const Index next_index{current_idx_.x, ++current_idx_.y};
                     if (getRotation() != 180) {
                         setRotation(180);
                     }
@@ -101,7 +101,7 @@ namespace mas {
                 case Direction::DOWN_RIGHT:
                     break;
                 case Direction::RIGHT: {
-                    const Index next_index{++current_idx_.front(), current_idx_.back()};
+                    const Index next_index{++current_idx_.x, current_idx_.y};
                     if (getRotation() != 90) {
                         setRotation(90);
                     }
@@ -125,8 +125,8 @@ namespace mas {
             path_ = dfs_.getPath();
             std::cout << "Agent path: \n";
             for (const auto& grid : path_) {
-                std::cout << "grid x: " << grid.index_.front() << " "
-                          << "grid y: " << grid.index_.back() << "\n";
+                // std::cout << "grid x: " << grid.index_.front() << " "
+                //           << "grid y: " << grid.index_.back() << "\n";
             }
             return true;
         }
@@ -149,8 +149,8 @@ namespace mas {
 
         void updateCurrentIndex()
         {
-            current_idx_.front() = getPosition().x / step_size_;
-            current_idx_.back() = getPosition().y / step_size_;
+            current_idx_.x = getPosition().x / step_size_;
+            current_idx_.y = getPosition().y / step_size_;
         }
 
         bool isCollide(const Index& next_index)
@@ -159,21 +159,20 @@ namespace mas {
             // next_index.back()
             //           << "\n";
             for (const auto& obstacle : internal_map_.getObstacles()) {
-                if (obstacle.front() == next_index.front())
-                    if (obstacle.back() == next_index.back())
-                        return true;
+                if (obstacle == next_index)
+                    return true;
             }
             return false;
         }
 
         bool isOutOfBound(const Index& next_index)
         {
-            std::cout << "map size x: " << internal_map_.getColumnSize() << "\n";
-            std::cout << "map size y: " << internal_map_.getRowSize() << "\n";
-            if (next_index.front() >= internal_map_.getColumnSize()) {
+            // std::cout << "map size x: " << internal_map_.getColumnSize() << "\n";
+            // std::cout << "map size y: " << internal_map_.getRowSize() << "\n";
+            if (next_index.x >= internal_map_.getColumnSize()) {
                 return true;
             }
-            else if (next_index.back() >= internal_map_.getRowSize()) {
+            else if (next_index.y >= internal_map_.getRowSize()) {
                 return true;
             }
             return false;

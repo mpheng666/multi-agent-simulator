@@ -12,7 +12,7 @@ namespace mas {
         , map_(1000, 600, 50, window_width / 2.0f, window_height / 2.0f)
         , agent_(map_.getStepSize(), map_)
     {
-        map_.spawnObstacles(1);
+        map_.spawnObstacles(30);
         agent_.internal_map_.addObstacles(map_.getObstacles());
         agent_.internal_map_.setGrids(map_.getGrids());
     }
@@ -48,8 +48,7 @@ namespace mas {
     {
         rwindow_.setFramerateLimit(60);
         Grid goal;
-        goal.index_.front() = 2;
-        goal.index_.back() = 2;
+        goal.setIndex({2, 2});
         agent_.setGoal(goal);
         agent_.searchPath();
         auto path = agent_.getFoundPath();

@@ -23,10 +23,10 @@ namespace mas {
                 std::this_thread::sleep_for(std::chrono::milliseconds(1000));
                 auto next_grid = path_.top();
                 next_grid.visited_state = VisitedState::VISITED;
-                std::cout << "path_grid: " << next_grid.index_.front() << " "
-                          << next_grid.index_.back() << "\n";
+                std::cout << "path_grid: " << next_grid.getIndex().x << " "
+                          << next_grid.getIndex().y << "\n";
                 path_.pop();
-                if (next_grid.index_ == getGoal().index_) {
+                if (next_grid.getIndex() == getGoal().getIndex()) {
                     return true;
                 }
                 auto neighbours = getNeighbours(next_grid);
@@ -45,33 +45,33 @@ namespace mas {
         {
             auto grids = getMap().getGrids();
             Grid current_grid = getStart();
-            grids.at(current_grid.index_.front())
-            .at(current_grid.index_.back())
+            grids.at(current_grid.getIndex().x)
+            .at(current_grid.getIndex().y)
             .visited_state = VisitedState::VISITED;
             path_.push(current_grid);
             while (path_.size()) {
                 // std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-                if (path_.top().index_ == getGoal().index_) {
+                if (path_.top().getIndex() == getGoal().getIndex()) {
                     std::cout << "Found goal! \n";
                     return true;
                 }
                 Grid next_grid = path_.top();
                 path_.pop();
-                std::cout << "next_grid >> : " << next_grid.index_.front() << " "
-                          << next_grid.index_.back() << "\n";
+                std::cout << "next_grid >> : " << next_grid.getIndex().x << " "
+                          << next_grid.getIndex().y << "\n";
 
-                grids.at(next_grid.index_.front())
-                .at(next_grid.index_.back())
+                grids.at(next_grid.getIndex().x)
+                .at(next_grid.getIndex().y)
                 .visited_state = VisitedState::VISITED;
 
                 auto neighbours = getNeighbours(next_grid);
 
                 for (auto& neighbour : neighbours) {
-                    if (grids.at(neighbour.index_.front())
-                        .at(neighbour.index_.back())
+                    if (grids.at(neighbour.getIndex().x)
+                        .at(neighbour.getIndex().y)
                         .visited_state == VisitedState::NOT_VISITED) {
-                        grids.at(neighbour.index_.front())
-                        .at(neighbour.index_.back())
+                        grids.at(neighbour.getIndex().x)
+                        .at(neighbour.getIndex().y)
                         .visited_state = VisitedState::VISITED;
                         path_.push(neighbour);
                     }
@@ -92,6 +92,17 @@ namespace mas {
 
     private:
         std::stack<Grid> path_;
+
+        void printPathStack()
+        {
+            std::stack<Grid> printStack = path_;
+            std::cout << "Current stack: ";
+            while (printStack.size()) {
+                // std::cout << printStack.top().getIndex() << " ";
+                printStack.pop();
+            }
+            std::cout << "\n";
+        }
     };
 } // namespace mas
 

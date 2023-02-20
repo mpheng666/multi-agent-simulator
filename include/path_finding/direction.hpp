@@ -7,7 +7,13 @@ namespace mas {
     enum class PathFinderDirection { CARDINAL, ORDINAL };
 
     struct CardinalStep {
-        static constexpr std::array<std::array<int, 2>, 4> steps{{{1, 0}, {0, 1}, {-1, 0}, {0, -1}}};
+        static constexpr std::array<std::array<int, 2>, 4> steps{
+        {{1, 0}, {0, 1}, {-1, 0}, {0, -1}}};
+    };
+
+    struct OrdinalStep {
+        static constexpr std::array<std::array<int, 2>, 8> steps{
+        {{1, 0}, {1, -1}, {0, -1}, {-1, -1}, {-1, 0}, {-1, 1}, {0, 1}, {1, 1}}};
     };
 } // namespace mas
 
