@@ -48,7 +48,7 @@ namespace mas {
     {
         rwindow_.setFramerateLimit(60);
         Grid goal;
-        goal.setIndex({2, 2});
+        goal.setIndex({3, 5});
         agent_.setGoal(goal);
         agent_.searchPath();
         auto path = agent_.getFoundPath();

@@ -47,8 +47,8 @@ namespace mas {
                     break;
             }
             updateCurrentIndex();
-            // std::cout << "Current index: " << current_idx_.x << ","
-            //           << current_idx_.y << "\n";
+            std::cout << "Current index: " << current_idx_.x << ","
+                      << current_idx_.y << "\n";
         }
 
         void initialiseAgent()
@@ -155,9 +155,7 @@ namespace mas {
 
         bool isCollide(const Index& next_index)
         {
-            // std::cout << "Next index: " << next_index.front() << "," <<
-            // next_index.back()
-            //           << "\n";
+            std::cout << "Next index: " << next_index.x << "|" << next_index.y << "\n";
             for (const auto& obstacle : internal_map_.getObstacles()) {
                 if (obstacle == next_index)
                     return true;
@@ -167,8 +165,8 @@ namespace mas {
 
         bool isOutOfBound(const Index& next_index)
         {
-            // std::cout << "map size x: " << internal_map_.getColumnSize() << "\n";
-            // std::cout << "map size y: " << internal_map_.getRowSize() << "\n";
+            std::cout << "map size x: " << internal_map_.getColumnSize() << "\n";
+            std::cout << "map size y: " << internal_map_.getRowSize() << "\n";
             if (next_index.x >= internal_map_.getColumnSize()) {
                 return true;
             }

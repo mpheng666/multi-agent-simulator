@@ -10,8 +10,8 @@ namespace mas {
 
         Index(unsigned int x, unsigned int y)
         {
-            x = x;
-            y = y;
+            this->x = x;
+            this->y = y;
         }
         unsigned int x{0};
         unsigned int y{0};
