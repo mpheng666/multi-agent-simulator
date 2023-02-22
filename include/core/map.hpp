@@ -70,11 +70,11 @@ namespace mas {
             // std::cout << "\n";
         }
 
-        std::set<Index> getObstacles() const { return obstacles_; }
+        std::set<Index, IndexComparator> getObstacles() const { return obstacles_; }
 
         void addObstacle(const Index& new_obstacle) { obstacles_.insert(new_obstacle); }
 
-        void addObstacles(const std::set<Index>& new_obstacles)
+        void addObstacles(const std::set<Index, IndexComparator>& new_obstacles)
         {
             for (const auto& obstacle : new_obstacles) {
                 addObstacle(obstacle);
@@ -105,7 +105,7 @@ namespace mas {
         unsigned int row_num_{height_ / step_size_};
 
         std::vector<std::vector<Grid>> grids_{};
-        std::set<Index> obstacles_;
+        std::set<Index, IndexComparator> obstacles_;
     };
 } // namespace mas
 

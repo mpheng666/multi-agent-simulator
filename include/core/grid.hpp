@@ -29,6 +29,13 @@ namespace mas {
         }
     };
 
+    struct IndexComparator {
+        bool operator()(const Index& lhs, const Index& rhs) const
+        {
+            return lhs.x < rhs.x;
+        }
+    };
+
     enum class SpaceState : int { UNKNOWN, EMPTY, OCCUPIED };
     enum class VisitedState : int { NOT_VISITED, VISITED };
     class Grid : public sf::RectangleShape {
