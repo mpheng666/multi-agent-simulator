@@ -20,7 +20,7 @@ namespace mas {
             STAY
         };
 
-        Agent(const int step_size, const Map& map)
+        Agent(const int step_size, Map& map)
             : step_size_(step_size)
             , internal_map_(map)
             , dfs_(map)

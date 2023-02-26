@@ -38,33 +38,81 @@ namespace mas {
 
     enum class SpaceState : int { UNKNOWN, EMPTY, OCCUPIED };
     enum class VisitedState : int { NOT_VISITED, VISITED };
+
     class Grid : public sf::RectangleShape {
     public:
         Grid() = default;
 
-        Grid(unsigned int x, unsigned int y)
+        Grid(unsigned int x,
+             unsigned int y,
+             const SpaceState& space_state = SpaceState::UNKNOWN,
+             const VisitedState& visited_state = VisitedState::NOT_VISITED)
+            : index_(x, y)
+            , space_state_(space_state)
+            , visited_state_(visited_state)
         {
-            index_.x = x;
-            index_.y = y;
+            updateSpaceColour();
+            updateVisitColour();
+            setOutlineThickness(1.0f);
         }
 
         Grid(Index index) { index_ = index; }
 
-        SpaceState space_state_{SpaceState::UNKNOWN};
-        VisitedState visited_state{VisitedState::NOT_VISITED};
+        void setIndex(const Index& index) { index_ = index; }
+        Index getIndex() const { return index_; }
+        void setText() { text_.setString("123"); }
 
         sf::Vector2f map_position_{0.0f, 0.0f};
 
-        void setIndex(const Index& index) { index_ = index; }
+        SpaceState getSpaceState() const { return space_state_; }
 
-        Index getIndex() const { return index_; }
+        void setSpaceState(const SpaceState& space_state)
+        {
+            space_state_ = space_state;
+            updateSpaceColour();
+        }
 
-        void setText() { text_.setString("123"); }
+        VisitedState getVisitedState() const { return visited_state_; }
+
+        void setVisitedState(const VisitedState& visited_state)
+        {
+            visited_state_ = visited_state;
+            updateVisitColour();
+        }
 
     private:
         Index index_{0, 0};
         sf::Texture texture_;
         sf::Text text_;
+        SpaceState space_state_{SpaceState::UNKNOWN};
+        VisitedState visited_state_{VisitedState::NOT_VISITED};
+
+        void updateSpaceColour()
+        {
+            switch (space_state_) {
+                case SpaceState::UNKNOWN:
+                    setFillColor(sf::Color::White);
+                    break;
+                case SpaceState::EMPTY:
+                    setFillColor(sf::Color::Green);
+                    break;
+                case SpaceState::OCCUPIED:
+                    setFillColor(sf::Color::Red);
+                    break;
+            }
+        }
+
+        void updateVisitColour()
+        {
+            switch (visited_state_) {
+                case VisitedState::VISITED:
+                    setOutlineColor(sf::Color::Yellow);
+                    break;
+                case VisitedState::NOT_VISITED:
+                    setOutlineColor(sf::Color::Black);
+                    break;
+            }
+        }
     };
 } // namespace mas
 

@@ -9,7 +9,7 @@
 namespace mas {
     class DepthFirstSearch : public MASPathFinder {
     public:
-        DepthFirstSearch(const Map& map)
+        DepthFirstSearch(Map& map)
             : MASPathFinder(map)
         {
         }
@@ -17,12 +17,12 @@ namespace mas {
         bool doSearch() override
         {
             Grid currrent_grid = getStart();
-            currrent_grid.visited_state = VisitedState::VISITED;
+            currrent_grid.setVisitedState(VisitedState::VISITED);
             path_.push(currrent_grid);
             while (path_.size()) {
                 std::this_thread::sleep_for(std::chrono::milliseconds(1000));
                 auto next_grid = path_.top();
-                next_grid.visited_state = VisitedState::VISITED;
+                next_grid.setVisitedState(VisitedState::VISITED);
                 std::cout << "path_grid: " << next_grid.getIndex().x << " "
                           << next_grid.getIndex().y << "\n";
                 path_.pop();
@@ -31,8 +31,8 @@ namespace mas {
                 }
                 auto neighbours = getNeighbours(next_grid);
                 for (auto& neighbour : neighbours) {
-                    if (neighbour.visited_state == VisitedState::NOT_VISITED) {
-                        neighbour.visited_state = VisitedState::VISITED;
+                    if (neighbour.getVisitedState() == VisitedState::NOT_VISITED) {
+                        neighbour.setVisitedState(VisitedState::VISITED);
                         path_.push(neighbour);
                     }
                 }
@@ -47,7 +47,7 @@ namespace mas {
             Grid current_grid = getStart();
             grids.at(current_grid.getIndex().x)
             .at(current_grid.getIndex().y)
-            .visited_state = VisitedState::VISITED;
+            .setVisitedState(VisitedState::VISITED);
             path_.push(current_grid);
             while (path_.size()) {
                 // std::this_thread::sleep_for(std::chrono::milliseconds(1000));
@@ -62,17 +62,17 @@ namespace mas {
 
                 grids.at(next_grid.getIndex().x)
                 .at(next_grid.getIndex().y)
-                .visited_state = VisitedState::VISITED;
+                .setVisitedState(VisitedState::VISITED);
 
                 auto neighbours = getNeighbours(next_grid);
 
                 for (auto& neighbour : neighbours) {
                     if (grids.at(neighbour.getIndex().x)
                         .at(neighbour.getIndex().y)
-                        .visited_state == VisitedState::NOT_VISITED) {
+                        .getVisitedState() == VisitedState::NOT_VISITED) {
                         grids.at(neighbour.getIndex().x)
                         .at(neighbour.getIndex().y)
-                        .visited_state = VisitedState::VISITED;
+                        .setVisitedState(VisitedState::VISITED);
                         path_.push(neighbour);
                     }
                 }

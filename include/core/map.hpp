@@ -39,14 +39,12 @@ namespace mas {
             for (unsigned int i = 0; i < col_num_; ++i) {
                 for (unsigned int j = 0; j < row_num_; ++j) {
                     grids_.at(i).at(j).setIndex({i, j});
-                    grids_.at(i).at(j).space_state_ = SpaceState::EMPTY;
+                    grids_.at(i).at(j).setSpaceState(SpaceState::EMPTY);
+                    grids_.at(i).at(j).setVisitedState(VisitedState::NOT_VISITED);
                     float position_x = -origin_x_ + offset_x_ + i * step_size_;
                     float position_y = -origin_y_ + offset_y_ + j * step_size_;
                     grids_.at(i).at(j).setPosition(position_x, position_y);
                     grids_.at(i).at(j).setSize(sf::Vector2f(step_size_, step_size_));
-                    grids_.at(i).at(j).setFillColor(sf::Color::White);
-                    grids_.at(i).at(j).setOutlineColor(sf::Color::Black);
-                    grids_.at(i).at(j).setOutlineThickness(1.0f);
                 }
             }
         }
@@ -59,8 +57,7 @@ namespace mas {
             for (int i = 0; i < num; ++i) {
                 unsigned int obstacle_x = d_col(rd);
                 unsigned int obstacle_y = d_row(rd);
-                grids_.at(obstacle_x).at(obstacle_y).space_state_ = SpaceState::OCCUPIED;
-                grids_.at(obstacle_x).at(obstacle_y).setFillColor(sf::Color::Red);
+                grids_.at(obstacle_x).at(obstacle_y).setSpaceState(SpaceState::OCCUPIED);
                 obstacles_.insert(Index(obstacle_x, obstacle_y));
             }
             // for (const auto& obstacle : obstacles_) {
@@ -87,9 +84,10 @@ namespace mas {
 
         void setPath(const std::vector<Grid>& path_grids)
         {
-            for(const auto& grid : path_grids)
-            {
-                grids_.at(grid.getIndex().x).at(grid.getIndex().y).setFillColor(sf::Color::Green);
+            for (const auto& grid : path_grids) {
+                grids_.at(grid.getIndex().x)
+                .at(grid.getIndex().y)
+                .setVisitedState(VisitedState::VISITED);
             }
         }
 
@@ -98,6 +96,7 @@ namespace mas {
         float origin_x_{width_ / 2.0f};
         float origin_y_{height_ / 2.0f};
         unsigned int step_size_{10};
+
     private:
         unsigned int width_{10};
         unsigned int height_{10};

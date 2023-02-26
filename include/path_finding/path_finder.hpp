@@ -10,7 +10,7 @@
 namespace mas {
     class MASPathFinder {
     public:
-        MASPathFinder(const Map& map)
+        MASPathFinder(Map& map)
             : map_(map){
 
               };
@@ -25,7 +25,7 @@ namespace mas {
                                current_grid.getIndex().y + direction.back());
                 if (neighbour.getIndex().x < map_.getColumnSize() &&
                     neighbour.getIndex().y < map_.getRowSize() &&
-                    neighbour.space_state_ != SpaceState::OCCUPIED) {
+                    neighbour.getSpaceState() != SpaceState::OCCUPIED) {
                     std::cout << "neighbour: " << neighbour.getIndex().x << " "
                               << neighbour.getIndex().y << "\n";
                     neighbours.emplace_back(neighbour);
