@@ -39,7 +39,7 @@ namespace mas {
             for (unsigned int i = 0; i < col_num_; ++i) {
                 for (unsigned int j = 0; j < row_num_; ++j) {
                     grids_.at(i).at(j).setIndex({i, j});
-                    grids_.at(i).at(j).setSpaceState(SpaceState::EMPTY);
+                    grids_.at(i).at(j).setSpaceState(SpaceState::UNKNOWN);
                     grids_.at(i).at(j).setVisitedState(VisitedState::NOT_VISITED);
                     float position_x = -origin_x_ + offset_x_ + i * step_size_;
                     float position_y = -origin_y_ + offset_y_ + j * step_size_;

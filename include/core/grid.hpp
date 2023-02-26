@@ -53,7 +53,7 @@ namespace mas {
         {
             updateSpaceColour();
             updateVisitColour();
-            setOutlineThickness(1.0f);
+            setOutlineThickness(2.0f);
         }
 
         Grid(Index index) { index_ = index; }
@@ -77,6 +77,7 @@ namespace mas {
         void setVisitedState(const VisitedState& visited_state)
         {
             visited_state_ = visited_state;
+            setOutlineThickness(2.0f);
             updateVisitColour();
         }
 
