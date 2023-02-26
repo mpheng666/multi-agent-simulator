@@ -107,9 +107,11 @@ namespace mas {
         {
             switch (visited_state_) {
                 case VisitedState::VISITED:
+                    setOutlineThickness(10.0f);
                     setOutlineColor(sf::Color::Yellow);
                     break;
                 case VisitedState::NOT_VISITED:
+                    setOutlineThickness(2.0f);
                     setOutlineColor(sf::Color::Black);
                     break;
             }

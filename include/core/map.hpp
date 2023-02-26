@@ -93,8 +93,8 @@ namespace mas {
 
         float offset_x_{0.0f};
         float offset_y_{0.0f};
-        float origin_x_{width_ / 2.0f};
-        float origin_y_{height_ / 2.0f};
+        float origin_x_{0.0f};
+        float origin_y_{0.0f};
         unsigned int step_size_{10};
 
     private:

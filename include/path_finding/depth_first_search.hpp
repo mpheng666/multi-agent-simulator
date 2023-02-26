@@ -3,6 +3,7 @@
 
 #include "path_finder.hpp"
 #include <chrono>
+#include <list>
 #include <stack>
 #include <thread>
 #include <unordered_set>
@@ -16,41 +17,15 @@ namespace mas {
 
         bool doSearch() override
         {
-            Grid currrent_grid = getStart();
-            currrent_grid.setVisitedState(VisitedState::VISITED);
-            path_.push(currrent_grid);
-            while (path_.size()) {
-                std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-                auto next_grid = path_.top();
-                next_grid.setVisitedState(VisitedState::VISITED);
-                std::cout << "path_grid: " << next_grid.getIndex().x << " "
-                          << next_grid.getIndex().y << "\n";
-                path_.pop();
-                if (next_grid.getIndex() == getGoal().getIndex()) {
-                    return true;
-                }
-                auto neighbours = getNeighbours(next_grid);
-                for (auto& neighbour : neighbours) {
-                    if (neighbour.getVisitedState() == VisitedState::NOT_VISITED) {
-                        neighbour.setVisitedState(VisitedState::VISITED);
-                        path_.push(neighbour);
-                    }
-                }
-            }
-
-            return false;
-        }
-
-        bool doMapSearch()
-        {
             auto grids = getMap().getGrids();
             Grid current_grid = getStart();
+
             grids.at(current_grid.getIndex().x)
             .at(current_grid.getIndex().y)
             .setVisitedState(VisitedState::VISITED);
+
             path_.push(current_grid);
             while (path_.size()) {
-                // std::this_thread::sleep_for(std::chrono::milliseconds(1000));
                 if (path_.top().getIndex() == getGoal().getIndex()) {
                     std::cout << "Found goal! \n";
                     return true;
@@ -63,16 +38,21 @@ namespace mas {
                 grids.at(next_grid.getIndex().x)
                 .at(next_grid.getIndex().y)
                 .setVisitedState(VisitedState::VISITED);
+                explored_path_.push_back(next_grid.getIndex());
+
+                grids.at(next_grid.getIndex().x)
+                .at(next_grid.getIndex().y)
+                .setSpaceState(SpaceState::EMPTY);
 
                 auto neighbours = getNeighbours(next_grid);
 
                 for (auto& neighbour : neighbours) {
                     if (grids.at(neighbour.getIndex().x)
                         .at(neighbour.getIndex().y)
-                        .getVisitedState() == VisitedState::NOT_VISITED) {
+                        .getVisitedState() == VisitedState::NOT_VISITED &&
                         grids.at(neighbour.getIndex().x)
                         .at(neighbour.getIndex().y)
-                        .setVisitedState(VisitedState::VISITED);
+                        .getSpaceState() != SpaceState::OCCUPIED) {
                         path_.push(neighbour);
                     }
                 }
@@ -82,16 +62,14 @@ namespace mas {
 
         std::vector<Grid> getPath()
         {
-            std::vector<Grid> ret_path;
-            while (path_.size()) {
-                ret_path.push_back(path_.top());
-                path_.pop();
-            }
+            std::vector<Grid> ret_path(explored_path_.begin(), explored_path_.end());
+
             return ret_path;
         }
 
     private:
         std::stack<Grid> path_;
+        std::list<Grid> explored_path_;
 
         void printPathStack()
         {

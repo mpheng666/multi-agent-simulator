@@ -2,7 +2,7 @@
 #define MAS_CORE_AGENT_HPP_
 
 #include "SFML/Graphics.hpp"
-#include "path_finding/dfs.hpp"
+#include "path_finding/depth_first_search.hpp"
 #include <core/map.hpp>
 #include <iostream>
 namespace mas {
@@ -121,12 +121,12 @@ namespace mas {
 
         bool searchPath()
         {
-            dfs_.doMapSearch();
+            dfs_.doSearch();
             path_ = dfs_.getPath();
             std::cout << "Agent path: \n";
             for (const auto& grid : path_) {
-                // std::cout << "grid x: " << grid.index_.front() << " "
-                //           << "grid y: " << grid.index_.back() << "\n";
+                std::cout << "grid x: " << grid.getIndex().x << " "
+                          << "grid y: " << grid.getIndex().y << "\n";
             }
             return true;
         }
