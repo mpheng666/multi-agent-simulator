@@ -11,8 +11,8 @@ namespace mas
     class BFS : public PathFinder
     {
         public:
-        BFS(MapT& map)
-            : PathFinder(map)
+        BFS(MapT& map, char agent_symbol)
+            : PathFinder(map, agent_symbol)
         {
         }
 
@@ -21,12 +21,12 @@ namespace mas
         {
             if (isOutOfBound(start))
             {
-                std::cout << "start OOB!";
+                // std::cout << "start OOB!";
                 return std::nullopt;
             }
             if (isOutOfBound(goal))
             {
-                std::cout << "goal OOB!";
+                // std::cout << "goal OOB!";
                 return std::nullopt;
             }
 
@@ -55,17 +55,17 @@ namespace mas
                     if (next == goal)
                     {
                         parents[next] = curr;
-                        std::cout << "found goal! \n";
+                        // std::cout << "found goal! \n";
                         is_goal_found = true;
                         break;
                     }
 
-                    auto prev_state      = map_[next.x][next.y];
-                    map_[next.x][next.y] = 'e';
-                    using namespace std::chrono_literals;
-                    std::this_thread::sleep_for(10ms);
-                    printMap(map_);
-                    map_[next.x][next.y] = prev_state;
+                    // auto prev_state      = map_[next.x][next.y];
+                    // map_[next.x][next.y] = 'e';
+                    // using namespace std::chrono_literals;
+                    // std::this_thread::sleep_for(1ms);
+                    // printMap(map_);
+                    // map_[next.x][next.y] = prev_state;
 
                     if (map_[next.x][next.y] == ' ' && !visited.count(next))
                     {

@@ -8,8 +8,11 @@ using namespace mas;
 
 int main()
 {
-    static constexpr int MIN_MAP_SIZE = 10;
-    static constexpr int MAX_MAP_SIZE = 40;
+    using namespace std::chrono_literals;
+    static constexpr int MIN_MAP_SIZE = 40;
+    static constexpr int MAX_MAP_SIZE = 50;
+    static constexpr auto SLEEP_DURATION_MS = 50ms;
+    static constexpr int AGENT_COUNT = 5;
 
     std::random_device rd;
     std::mt19937 gen(rd());
@@ -35,39 +38,38 @@ int main()
     std::uniform_int_distribution<int> disx(0, map.size() - 1);
     std::uniform_int_distribution<int> disy(0, map.front().size() - 1);
 
-    PoseT start;
-    PoseT goal;
-    start.x = disx(gen);
-    start.y = disy(gen);
-    goal.x  = disx(gen);
-    goal.y  = disy(gen);
-
-    std::cout << "start: " << start.x << " " << start.y << "\n";
-    std::cout << "goal: " << goal.x << " " << goal.y << "\n";
-
-    map[start.x][start.y] = 's';
-    map[goal.x][goal.y]   = 'g';
-
-    BFS bfs(map);
-
-    const auto path = bfs.planPath(start, goal);
-    if (path)
+    for(int i = 0; i < AGENT_COUNT; ++i)
     {
-        for (const auto& pose : path.value())
+        PoseT start;
+        PoseT goal;
+        start.x = disx(gen);
+        start.y = disy(gen);
+        goal.x  = disx(gen);
+        goal.y  = disy(gen);
+
+        map[start.x][start.y] = 's';
+        map[goal.x][goal.y]   = 'g';
+
+        BFS bfs(map, '1' + i);
+
+        const auto path = bfs.planPath(start, goal);
+
+        if (path)
         {
-            if (map[pose.x][pose.y] != 's' && map[pose.x][pose.y] != 'g')
+            for (const auto& pose : path.value())
             {
-                map[pose.x][pose.y] = 'O';
-                PathFinder::printMap(map);
-                using namespace std::chrono_literals;
-                std::this_thread::sleep_for(200ms);
+                if (map[pose.x][pose.y] != 's' && map[pose.x][pose.y] != 'g')
+                {
+                    map[pose.x][pose.y] = '1' + i;
+                    PathFinder::printMap(map);
+                    std::this_thread::sleep_for(SLEEP_DURATION_MS);
+                }
             }
         }
+        else
+        {
+            std::cout << "no path found!";
+        }
     }
-    else
-    {
-        std::cout << "no path found!";
-    }
-
     return 0;
 }

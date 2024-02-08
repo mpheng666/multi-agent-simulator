@@ -54,8 +54,9 @@ namespace mas
     class PathFinder
     {
         public:
-        PathFinder(const MapT& map)
+        PathFinder(const MapT& map, char agent_symbol)
             : map_(map)
+            , agent_symbol_(agent_symbol)
         {
         }
 
@@ -91,6 +92,7 @@ namespace mas
                                                            const PoseT& goal) = 0;
 
         MapT map_;
+        char agent_symbol_;
     };
 }  // namespace mas
 
