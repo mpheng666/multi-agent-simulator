@@ -9,7 +9,7 @@ namespace mas {
         : rwindow_(sf::VideoMode(window_width, window_height),
                    window_name,
                    sf::Style::Titlebar | sf::Style::Close)
-        , map_(1000, 600, 50, window_width / 2.0f, window_height / 2.0f)
+        , map_(1000, 600, 20, window_width / 2.0f, window_height / 2.0f)
         , agent_(map_.getStepSize(), map_)
     {
         map_.spawnObstacles(30);
