@@ -15,8 +15,6 @@ int main(int argc, char** argv)
     map_config.grid_size = 20;
     Map map(map_config);
 
-    Window window(window_config, map);
-
     std::vector<Agent> agents;
     AgentConfig agent_config;
     agent_config.grid_config = map.getGrids()[0][0].getGridConfig();
@@ -25,8 +23,7 @@ int main(int argc, char** argv)
     agent_config.grid_config.position = start;
     agents.emplace_back(agent_config, map);
 
-    Simulator simulator(window, agents);
-
+    Simulator simulator(window_config, map, agents);
     simulator.run();
 
     return 0;
