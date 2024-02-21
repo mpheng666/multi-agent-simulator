@@ -10,16 +10,27 @@ include_directories(${GOOGLETEST_INCLUDE_DIR})
 find_package(SFML 2.5 COMPONENTS graphics REQUIRED)
 
 include_directories(include)
-# add_executable(multi_robot_simulator src/simulator/simulator.cpp src/main.cpp)
-# target_link_libraries(multi_robot_simulator sfml-graphics)
 
-add_executable(path_finder_node src/path_finder/path_finder_node.cpp)
-
-add_executable(BFSTest
-    test/path_finder/bfs_test.cpp
+set(SOURCES
+    src/core/simulator.cpp
+    src/core/window.cpp
+    src/core/map.cpp
+    src/core/grid.cpp
+    src/core/button.cpp
+    src/core/agent.cpp
+    src/main.cpp
 )
-target_link_libraries(BFSTest gtest gtest_main gmock gmock_main)
 
-enable_testing()
-include(GoogleTest)
-gtest_discover_tests(BFSTest)
+add_executable(multi_robot_simulator ${SOURCES})
+target_link_libraries(multi_robot_simulator sfml-graphics)
+
+# add_executable(path_finder_node src/path_finder/path_finder_node.cpp)
+
+# add_executable(BFSTest
+#     test/path_finder/bfs_test.cpp
+# )
+# target_link_libraries(BFSTest gtest gtest_main gmock gmock_main)
+
+# enable_testing()
+# include(GoogleTest)
+# gtest_discover_tests(BFSTest)
