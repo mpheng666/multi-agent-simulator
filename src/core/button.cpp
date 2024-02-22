@@ -12,4 +12,9 @@ namespace mas
         window.draw(shape_);
         window.draw(text_);
     }
+
+    void Button::setOnClick(const std::function<void()>& onClickT)
+    {
+        onclick_ = onClickT;
+    }
 }  // namespace mas

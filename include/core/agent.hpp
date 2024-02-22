@@ -9,6 +9,15 @@ namespace mas
     {
         GridConfig grid_config;
     };
+
+    enum class MoveDirection : int8_t
+    {
+        UP    = 1,
+        DOWN  = 2,
+        LEFT  = 3,
+        RIGHT = 4,
+    };
+
     class Agent : public Grid
     {
         public:
@@ -17,7 +26,7 @@ namespace mas
 
         void setAgentConfig(const GridConfig& config);
         void setMap(Map& map);
-        void move(const sf::Vector2f& direction);
+        void move(MoveDirection direction);
         void draw(sf::RenderWindow& window) const;
 
         private:

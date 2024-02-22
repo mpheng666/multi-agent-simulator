@@ -38,13 +38,13 @@ namespace mas
         grids_[position.y][position.x].setFillColor(sf::Color::Black);
     }
 
-    sf::Vector2i Map::getGridIndex(const sf::Vector2i& position)
+    sf::Vector2i Map::getGridIndex(const sf::Vector2i& position) const
     {
         return sf::Vector2i(position.x / map_config_.grid_size,
                             position.y / map_config_.grid_size);
     }
 
-    sf::Vector2f Map::getPosition(const sf::Vector2i& index)
+    sf::Vector2f Map::getPosition(const sf::Vector2i& index) const
     {
         return sf::Vector2f(index.x * map_config_.grid_size,
                             index.y * map_config_.grid_size);
@@ -75,6 +75,19 @@ namespace mas
     {
         return index.x >= 0 && index.x < static_cast<int>(map_config_.col_num) &&
                index.y >= 0 && index.y < static_cast<int>(map_config_.row_num);
+    }
+
+    void Map::addRandomObstacles(size_t num)
+    {
+        for (size_t i = 0; i < num; ++i)
+        {
+            auto x = static_cast<int>(rand() % map_config_.col_num);
+            auto y = static_cast<int>(rand() % map_config_.row_num);
+            if (!grids_[y][x].isObstacle())
+            {
+                addObstacle({x, y});
+            }
+        }
     }
 
 }  // namespace mas

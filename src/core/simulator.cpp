@@ -20,35 +20,63 @@ namespace mas
                         sf::Style::Close | sf::Style::Titlebar);
         rwindow_.setFramerateLimit(60);
 
-        clear_map_button_.shape_.setSize(
+        font_.loadFromFile("./../assets/fonts/arial.ttf");
+
+        Button clear_map_button;
+        Button random_obstacles_button;
+
+        clear_map_button.shape_.setSize(
             {static_cast<float>(window_config_.width - map_.getMapConfig().col_num *
                                                            map_.getMapConfig().grid_size),
              50.0f});
-        clear_map_button_.shape_.setFillColor(sf::Color::Red);
-        clear_map_button_.shape_.setPosition(
+        clear_map_button.shape_.setFillColor(sf::Color::Red);
+        clear_map_button.shape_.setPosition(
             static_cast<float>(map_.getMapConfig().col_num *
                                map_.getMapConfig().grid_size),
             0.0f);
 
-        clear_map_button_.font_.loadFromFile("./../assets/fonts/arial.ttf");
-        clear_map_button_.text_.setFont(clear_map_button_.font_);
-        clear_map_button_.text_.setString("Clear Map");
-        clear_map_button_.text_.setCharacterSize(24);
-        clear_map_button_.text_.setFillColor(sf::Color::White);
-        clear_map_button_.text_.setPosition(clear_map_button_.shape_.getPosition().x + 10,
-                                            clear_map_button_.shape_.getPosition().y +
-                                                10);
+        clear_map_button.text_.setFont(font_);
+        clear_map_button.text_.setString("Clear Map");
+        clear_map_button.text_.setCharacterSize(16);
+        clear_map_button.text_.setFillColor(sf::Color::White);
+        clear_map_button.text_.setPosition(clear_map_button.shape_.getPosition().x + 10,
+                                           clear_map_button.shape_.getPosition().y + 10);
+
+        random_obstacles_button.shape_.setSize(
+            {static_cast<float>(window_config_.width - map_.getMapConfig().col_num *
+                                                           map_.getMapConfig().grid_size),
+             50.0f});
+        random_obstacles_button.shape_.setFillColor(sf::Color::Yellow);
+        random_obstacles_button.shape_.setPosition(
+            static_cast<float>(map_.getMapConfig().col_num *
+                               map_.getMapConfig().grid_size),
+            50.0f);
+
+        random_obstacles_button.text_.setFont(font_);
+        random_obstacles_button.text_.setString("Random Obstacles");
+        random_obstacles_button.text_.setCharacterSize(16);
+        random_obstacles_button.text_.setFillColor(sf::Color::Black);
+        random_obstacles_button.text_.setPosition(
+            random_obstacles_button.shape_.getPosition().x + 10,
+            random_obstacles_button.shape_.getPosition().y + 10);
+
+        clear_map_button.setOnClick([this]() { map_.clearObstacles(); });
+        random_obstacles_button.setOnClick([this]() { map_.addRandomObstacles(50); });
+
+        buttons_.push_back(clear_map_button);
+        buttons_.push_back(random_obstacles_button);
     }
 
     void Simulator::run()
     {
         while (rwindow_.isOpen())
         {
-            clear_map_button_.draw(rwindow_);
+            for (const auto& button : buttons_)
+            {
+                button.draw(rwindow_);
+            }
             drawMap();
             processEvents();
-
-
             for (auto& agent : agents_)
             {
                 agent.draw(rwindow_);
@@ -68,14 +96,51 @@ namespace mas
             if (event.type == sf::Event::MouseButtonPressed)
             {
                 auto mouse_pos = sf::Mouse::getPosition(rwindow_);
-                if (clear_map_button_.isMouseOnButton(mouse_pos))
+                for (auto& button : buttons_)
                 {
-                    map_.clearObstacles();
+                    if (button.isMouseOnButton(mouse_pos))
+                    {
+                        if (button.onclick_ != nullptr)
+                        {
+                            button.onclick_();
+                        }
+                    }
                 }
                 if (isMouseOnMap(mouse_pos))
                 {
                     auto grid_pos = map_.getGridIndex({mouse_pos.x, mouse_pos.y});
                     map_.addObstacle({grid_pos.x, grid_pos.y});
+                }
+            }
+            if(event.type == sf::Event::KeyPressed)
+            {
+                if(event.key.code == sf::Keyboard::Up)
+                {
+                    for(auto& agent : agents_)
+                    {
+                        agent.move(MoveDirection::UP);
+                    }
+                }
+                if(event.key.code == sf::Keyboard::Down)
+                {
+                    for(auto& agent : agents_)
+                    {
+                        agent.move(MoveDirection::DOWN);
+                    }
+                }
+                if(event.key.code == sf::Keyboard::Left)
+                {
+                    for(auto& agent : agents_)
+                    {
+                        agent.move(MoveDirection::LEFT);
+                    }
+                }
+                if(event.key.code == sf::Keyboard::Right)
+                {
+                    for(auto& agent : agents_)
+                    {
+                        agent.move(MoveDirection::RIGHT);
+                    }
                 }
             }
         }
@@ -100,5 +165,5 @@ namespace mas
             }
         }
     }
-
+    
 }  // namespace mas

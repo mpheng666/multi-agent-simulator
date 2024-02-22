@@ -27,12 +27,15 @@ namespace mas
         sf::RenderWindow rwindow_;
         Map& map_;
         std::vector<Agent>& agents_;
-        Button clear_map_button_;
+        std::vector<Button> buttons_;
+        sf::Font font_;
 
         void init();
         void drawMap();
         void processEvents();
         bool isMouseOnMap(const sf::Vector2i& mouse_pos);
+
+        void moveAgents();
     };
 }  // namespace mas
 

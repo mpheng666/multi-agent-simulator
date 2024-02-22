@@ -21,4 +21,9 @@ namespace mas
         setOutlineColor(grid_config_.outline_color);
         setOutlineThickness(grid_config_.outline_thickness);
     }
+
+    bool Grid::isObstacle() const
+    {
+        return getFillColor() == sf::Color::Black;
+    }
 }  // namespace mas

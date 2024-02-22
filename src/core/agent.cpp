@@ -13,12 +13,37 @@ namespace mas
 
     void Agent::setMap(Map& map) { map_ = map; }
 
-    void Agent::move(const sf::Vector2f& direction)
+    void Agent::move(MoveDirection direction)
     {
-        sf::Vector2f new_position = getPosition() + direction;
-        if (map_.isPositionWithinMap(new_position))
+        const sf::Vector2i position = sf::Vector2i(getPosition().x, getPosition().y);
+        sf::Vector2i index          = map_.getGridIndex(position);
+        switch (direction)
         {
-            setPosition(new_position);
+            case MoveDirection::UP:
+                if (map_.isIndexWithinMap({index.x, index.y - 1}) &&
+                    !map_.getGrids()[index.y - 1][index.x].isObstacle())
+                {
+                    setPosition(map_.getPosition({index.x, index.y - 1}));
+                }
+                break;
+            case MoveDirection::DOWN:
+                if (map_.isIndexWithinMap({index.x, index.y + 1}) && !map_.getGrids()[index.y + 1][index.x].isObstacle())
+                {
+                    setPosition(map_.getPosition({index.x, index.y + 1}));
+                }
+                break;
+            case MoveDirection::LEFT:
+                if (map_.isIndexWithinMap({index.x - 1, index.y}) && !map_.getGrids()[index.y][index.x - 1].isObstacle())
+                {
+                    setPosition(map_.getPosition({index.x - 1, index.y}));
+                }
+                break;
+            case MoveDirection::RIGHT:
+                if (map_.isIndexWithinMap({index.x + 1, index.y}) && !map_.getGrids()[index.y][index.x + 1].isObstacle())
+                {
+                    setPosition(map_.getPosition({index.x + 1, index.y}));
+                }
+                break;
         }
     }
 

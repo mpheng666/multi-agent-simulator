@@ -24,6 +24,7 @@ namespace mas
 
         void setGridConfig(const GridConfig& config);
         GridConfig getGridConfig() const { return grid_config_; }
+        bool isObstacle() const;
 
         private:
         GridConfig grid_config_;
