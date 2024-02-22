@@ -30,7 +30,8 @@ namespace mas
                                map_.getMapConfig().grid_size),
             0.0f);
 
-        // clear_map_button_.text_.setFont(sf::Font::getDefaultFont());
+        clear_map_button_.font_.loadFromFile("./../assets/fonts/arial.ttf");
+        clear_map_button_.text_.setFont(clear_map_button_.font_);
         clear_map_button_.text_.setString("Clear Map");
         clear_map_button_.text_.setCharacterSize(24);
         clear_map_button_.text_.setFillColor(sf::Color::White);
