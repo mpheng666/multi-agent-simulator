@@ -248,7 +248,7 @@ namespace mas
     void Simulator::findPath(const sf::Vector2i& start, const sf::Vector2i& goal)
     {
         // map_.getGrids()[start.y][start.x].setType(GridType::START);
-        path_finder_.direction_type = IPathFinder::DIRECTIONS::FOUR;
+        // path_finder_.direction_type = IPathFinder::DIRECTIONS::FOUR;
 
         map_.getGrids()[goal.y][goal.x].setType(GridType::GOAL);
         auto agent_pos = agents_[0].getPosition();

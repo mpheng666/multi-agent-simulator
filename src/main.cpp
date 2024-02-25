@@ -5,14 +5,14 @@ int main(int argc, char** argv)
     using namespace mas;
 
     WindowConfig window_config;
-    window_config.width  = 1000;
-    window_config.height = 600;
+    window_config.width  = 1500;
+    window_config.height = 1000;
     window_config.name   = "Multi-Agent-Simulator";
 
     MapConfig map_config;
-    map_config.col_num   = 40;
-    map_config.row_num   = 50;
-    map_config.grid_size = 10;
+    map_config.col_num   = 60;
+    map_config.row_num   = 40;
+    map_config.grid_size = 20;
     Map map(map_config);
 
     std::vector<Agent> agents;

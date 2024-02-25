@@ -64,6 +64,7 @@ namespace mas
         };
 
         DIRECTIONS direction_type                                = DIRECTIONS::EIGHT;
+
         std::unordered_map<DIRECTIONS, DirectionT> direction_map = {
             {DIRECTIONS::FOUR, DIRECTIONS4},
             {DIRECTIONS::EIGHT, DIRECTIONS8},

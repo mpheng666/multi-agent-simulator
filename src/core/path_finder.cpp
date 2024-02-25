@@ -24,7 +24,7 @@ namespace mas
 
         HeuristicT euclidean = [](const sf::Vector2i& a, const sf::Vector2i& b)
         {
-            return std::sqrt(std::pow(a.x - b.x, 2) + std::pow(a.y - b.y, 2));
+            return static_cast<int>(std::sqrt(std::pow(a.x - b.x, 2) + std::pow(a.y - b.y, 2)));
         };
 
         DirectionT step_directions = direction_map[direction_type];
