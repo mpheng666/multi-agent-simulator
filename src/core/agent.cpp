@@ -21,25 +21,25 @@ namespace mas
         {
             case MoveDirection::UP:
                 if (map_.isIndexWithinMap({index.x, index.y - 1}) &&
-                    !map_.getGrids()[index.y - 1][index.x].isObstacle())
+                    !map_.isGridObstacle({index.x, index.y - 1}))
                 {
                     setPosition(map_.getPosition({index.x, index.y - 1}));
                 }
                 break;
             case MoveDirection::DOWN:
-                if (map_.isIndexWithinMap({index.x, index.y + 1}) && !map_.getGrids()[index.y + 1][index.x].isObstacle())
+                if (map_.isIndexWithinMap({index.x, index.y + 1}) && !map_.isGridObstacle({index.x, index.y + 1}))
                 {
                     setPosition(map_.getPosition({index.x, index.y + 1}));
                 }
                 break;
             case MoveDirection::LEFT:
-                if (map_.isIndexWithinMap({index.x - 1, index.y}) && !map_.getGrids()[index.y][index.x - 1].isObstacle())
+                if (map_.isIndexWithinMap({index.x - 1, index.y}) && !map_.isGridObstacle({index.x - 1, index.y}))
                 {
                     setPosition(map_.getPosition({index.x - 1, index.y}));
                 }
                 break;
             case MoveDirection::RIGHT:
-                if (map_.isIndexWithinMap({index.x + 1, index.y}) && !map_.getGrids()[index.y][index.x + 1].isObstacle())
+                if (map_.isIndexWithinMap({index.x + 1, index.y}) && !map_.isGridObstacle({index.x + 1, index.y}))
                 {
                     setPosition(map_.getPosition({index.x + 1, index.y}));
                 }

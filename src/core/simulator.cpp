@@ -5,10 +5,12 @@ namespace mas
 
     Simulator::Simulator(WindowConfig& window_config,
                          Map& map,
-                         std::vector<Agent>& agents)
+                         std::vector<Agent>& agents,
+                         IPathFinder& path_finder)
         : window_config_(window_config)
         , map_(map)
         , agents_(agents)
+        , path_finder_(path_finder)
     {
         init();
     }
@@ -24,6 +26,9 @@ namespace mas
 
         Button clear_map_button;
         Button random_obstacles_button;
+        Button run_button;
+        Button stop_button;
+        Button clear_path_button;
 
         clear_map_button.shape_.setSize(
             {static_cast<float>(window_config_.width - map_.getMapConfig().col_num *
@@ -60,11 +65,78 @@ namespace mas
             random_obstacles_button.shape_.getPosition().x + 10,
             random_obstacles_button.shape_.getPosition().y + 10);
 
+        run_button.shape_.setSize(
+            {static_cast<float>(window_config_.width - map_.getMapConfig().col_num *
+                                                           map_.getMapConfig().grid_size),
+             50.0f});
+        run_button.shape_.setFillColor(sf::Color::Green);
+        run_button.shape_.setPosition(static_cast<float>(map_.getMapConfig().col_num *
+                                                         map_.getMapConfig().grid_size),
+                                      100.0f);
+
+        run_button.text_.setFont(font_);
+        run_button.text_.setString("Run");
+        run_button.text_.setCharacterSize(16);
+        run_button.text_.setFillColor(sf::Color::Black);
+        run_button.text_.setPosition(run_button.shape_.getPosition().x + 10,
+                                     run_button.shape_.getPosition().y + 10);
+
+        stop_button.shape_.setSize(
+            {static_cast<float>(window_config_.width - map_.getMapConfig().col_num *
+                                                           map_.getMapConfig().grid_size),
+             50.0f});
+        stop_button.shape_.setFillColor(sf::Color::Blue);
+        stop_button.shape_.setPosition(static_cast<float>(map_.getMapConfig().col_num *
+                                                          map_.getMapConfig().grid_size),
+                                       150.0f);
+
+        stop_button.text_.setFont(font_);
+        stop_button.text_.setString("Stop");
+        stop_button.text_.setCharacterSize(16);
+        stop_button.text_.setFillColor(sf::Color::White);
+        stop_button.text_.setPosition(stop_button.shape_.getPosition().x + 10,
+                                      stop_button.shape_.getPosition().y + 10);
+
+        clear_path_button.shape_.setSize(
+            {static_cast<float>(window_config_.width - map_.getMapConfig().col_num *
+                                                           map_.getMapConfig().grid_size),
+             50.0f});
+        clear_path_button.shape_.setFillColor(sf::Color::Magenta);
+        clear_path_button.shape_.setPosition(
+            static_cast<float>(map_.getMapConfig().col_num *
+                               map_.getMapConfig().grid_size),
+            200.0f);
+
+        clear_path_button.text_.setFont(font_);
+        clear_path_button.text_.setString("Clear Path");
+        clear_path_button.text_.setCharacterSize(16);
+        clear_path_button.text_.setFillColor(sf::Color::White);
+        clear_path_button.text_.setPosition(clear_path_button.shape_.getPosition().x + 10,
+                                            clear_path_button.shape_.getPosition().y +
+                                                10);
+
         clear_map_button.setOnClick([this]() { map_.clearObstacles(); });
         random_obstacles_button.setOnClick([this]() { map_.addRandomObstacles(50); });
+        run_button.setOnClick(
+            [this]()
+            {
+                std::cout << "Run" << std::endl;
+                map_.clearPath();
+                findPath();
+            });
+        stop_button.setOnClick([this]() { std::cout << "Stop" << std::endl; });
+        clear_path_button.setOnClick(
+            [this]()
+            {
+                std::cout << "Clear Path" << std::endl;
+                map_.clearPath();
+            });
 
         buttons_.push_back(clear_map_button);
         buttons_.push_back(random_obstacles_button);
+        buttons_.push_back(run_button);
+        buttons_.push_back(stop_button);
+        buttons_.push_back(clear_path_button);
     }
 
     void Simulator::run()
@@ -108,36 +180,43 @@ namespace mas
                 }
                 if (isMouseOnMap(mouse_pos))
                 {
-                    auto grid_pos = map_.getGridIndex({mouse_pos.x, mouse_pos.y});
-                    map_.addObstacle({grid_pos.x, grid_pos.y});
+                    auto grid_idx = map_.getGridIndex({mouse_pos.x, mouse_pos.y});
+                    if (map_.isGridObstacle(grid_idx))
+                    {
+                        map_.clearObstacle(grid_idx);
+                    }
+                    else
+                    {
+                        map_.addObstacle(grid_idx);
+                    }
                 }
             }
-            if(event.type == sf::Event::KeyPressed)
+            if (event.type == sf::Event::KeyPressed)
             {
-                if(event.key.code == sf::Keyboard::Up)
+                if (event.key.code == sf::Keyboard::Up)
                 {
-                    for(auto& agent : agents_)
+                    for (auto& agent : agents_)
                     {
                         agent.move(MoveDirection::UP);
                     }
                 }
-                if(event.key.code == sf::Keyboard::Down)
+                if (event.key.code == sf::Keyboard::Down)
                 {
-                    for(auto& agent : agents_)
+                    for (auto& agent : agents_)
                     {
                         agent.move(MoveDirection::DOWN);
                     }
                 }
-                if(event.key.code == sf::Keyboard::Left)
+                if (event.key.code == sf::Keyboard::Left)
                 {
-                    for(auto& agent : agents_)
+                    for (auto& agent : agents_)
                     {
                         agent.move(MoveDirection::LEFT);
                     }
                 }
-                if(event.key.code == sf::Keyboard::Right)
+                if (event.key.code == sf::Keyboard::Right)
                 {
-                    for(auto& agent : agents_)
+                    for (auto& agent : agents_)
                     {
                         agent.move(MoveDirection::RIGHT);
                     }
@@ -165,5 +244,26 @@ namespace mas
             }
         }
     }
-    
+
+    void Simulator::findPath(const sf::Vector2i& start, const sf::Vector2i& goal)
+    {
+        // map_.getGrids()[start.y][start.x].setType(GridType::START);
+        path_finder_.direction_type = IPathFinder::DIRECTIONS::FOUR;
+
+        map_.getGrids()[goal.y][goal.x].setType(GridType::GOAL);
+        auto agent_pos = agents_[0].getPosition();
+        auto start_idx = map_.getGridIndex({static_cast<int>(agent_pos.x),
+                                           static_cast<int>(agent_pos.y)});
+        auto path = path_finder_.findPath(map_, start_idx, goal);
+        for (const auto& grid : path)
+        {
+            std::cout << grid.x << " " << grid.y << std::endl;
+            if (map_.getGrids()[grid.y][grid.x].getType() != GridType::START &&
+                map_.getGrids()[grid.y][grid.x].getType() != GridType::GOAL)
+            {
+                map_.getGrids()[grid.y][grid.x].setType(GridType::PATH);
+            }
+        }
+    }
+
 }  // namespace mas

@@ -33,9 +33,22 @@ namespace mas
 
     Grids& Map::getGrids() { return grids_; }
 
-    void Map::addObstacle(const sf::Vector2i& position)
+    void Map::addObstacle(const sf::Vector2i& index)
     {
-        grids_[position.y][position.x].setFillColor(sf::Color::Black);
+        if (isIndexWithinMap(index) &&
+            grids_[index.y][index.x].getType() == GridType::EMPTY)
+        {
+            grids_[index.y][index.x].setType(GridType::OBSTACLE);
+        }
+    }
+
+    void Map::clearObstacle(const sf::Vector2i& index)
+    {
+        if (isIndexWithinMap(index) &&
+            grids_[index.y][index.x].getType() == GridType::OBSTACLE)
+        {
+            grids_[index.y][index.x].setType(GridType::EMPTY);
+        }
     }
 
     sf::Vector2i Map::getGridIndex(const sf::Vector2i& position) const
@@ -56,7 +69,24 @@ namespace mas
         {
             for (size_t j = 0; j < map_config_.col_num; ++j)
             {
-                grids_[i][j].setFillColor(sf::Color::White);
+                if (grids_[i][j].getType() == GridType::OBSTACLE)
+                {
+                    grids_[i][j].setType(GridType::EMPTY);
+                }
+            }
+        }
+    }
+
+    void Map::clearPath()
+    {
+        for (size_t i = 0; i < map_config_.row_num; ++i)
+        {
+            for (size_t j = 0; j < map_config_.col_num; ++j)
+            {
+                if (grids_[i][j].getType() == GridType::PATH)
+                {
+                    grids_[i][j].setType(GridType::EMPTY);
+                }
             }
         }
     }
@@ -83,11 +113,16 @@ namespace mas
         {
             auto x = static_cast<int>(rand() % map_config_.col_num);
             auto y = static_cast<int>(rand() % map_config_.row_num);
-            if (!grids_[y][x].isObstacle())
+            if (grids_[y][x].getType() == GridType::EMPTY)
             {
-                addObstacle({x, y});
+                grids_[y][x].setType(GridType::OBSTACLE);
             }
         }
+    }
+
+    bool Map::isGridObstacle(const sf::Vector2i& index) const
+    {
+        return grids_[index.y][index.x].getType() == GridType::OBSTACLE;
     }
 
 }  // namespace mas

@@ -2,10 +2,20 @@
 #define MAS_CORE__GRID_HPP_
 
 #include "SFML/Graphics.hpp"
+
 #include <vector>
 
 namespace mas
 {
+    enum class GridType : int
+    {
+        EMPTY = 0,
+        OBSTACLE,
+        START,
+        GOAL,
+        PATH,
+    };
+
     struct GridConfig
     {
         sf::Vector2f position;
@@ -24,10 +34,12 @@ namespace mas
 
         void setGridConfig(const GridConfig& config);
         GridConfig getGridConfig() const { return grid_config_; }
-        bool isObstacle() const;
+        void setType(GridType type);
+        GridType getType() const;
 
         private:
         GridConfig grid_config_;
+        GridType type_ {GridType::EMPTY};
     };
 
 }  // namespace mas

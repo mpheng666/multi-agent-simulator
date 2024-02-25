@@ -26,11 +26,14 @@ namespace mas
         Grids& getGrids();
         sf::Vector2i getGridIndex(const sf::Vector2i& position) const;
         sf::Vector2f getPosition(const sf::Vector2i& index) const;
-        void addObstacle(const sf::Vector2i& position);
+        void addObstacle(const sf::Vector2i& index);
+        void clearObstacle(const sf::Vector2i& index);
         void clearObstacles();
+        void clearPath();
         bool isIndexWithinMap(const sf::Vector2i& index) const;
         bool isPositionWithinMap(const sf::Vector2f& position) const;
         void addRandomObstacles(size_t num);
+        bool isGridObstacle(const sf::Vector2i& index) const;
 
         private:
         MapConfig map_config_;

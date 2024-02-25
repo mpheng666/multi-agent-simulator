@@ -4,6 +4,7 @@
 #include "core/agent.hpp"
 #include "core/button.hpp"
 #include "core/map.hpp"
+#include "core/path_finder.hpp"
 #include "core/window.hpp"
 
 #include <SFML/Graphics.hpp>
@@ -19,7 +20,10 @@ namespace mas
     class Simulator
     {
         public:
-        Simulator(WindowConfig& window_config, Map& map, std::vector<Agent>& agents);
+        Simulator(WindowConfig& window_config,
+                  Map& map,
+                  std::vector<Agent>& agents,
+                  IPathFinder& path_finder);
         void run();
 
         private:
@@ -29,13 +33,14 @@ namespace mas
         std::vector<Agent>& agents_;
         std::vector<Button> buttons_;
         sf::Font font_;
+        IPathFinder& path_finder_;
 
         void init();
         void drawMap();
         void processEvents();
         bool isMouseOnMap(const sf::Vector2i& mouse_pos);
-
-        void moveAgents();
+        void findPath(const sf::Vector2i& start = {0, 0},
+                      const sf::Vector2i& goal  = {10, 10});
     };
 }  // namespace mas
 

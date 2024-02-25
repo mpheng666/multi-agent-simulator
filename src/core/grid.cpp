@@ -22,8 +22,29 @@ namespace mas
         setOutlineThickness(grid_config_.outline_thickness);
     }
 
-    bool Grid::isObstacle() const
+    void Grid::setType(GridType type)
     {
-        return getFillColor() == sf::Color::Black;
+        switch (type)
+        {
+            case GridType::EMPTY:
+                setFillColor(sf::Color::White);
+                break;
+            case GridType::OBSTACLE:
+                setFillColor(sf::Color::Black);
+                break;
+            case GridType::START:
+                setFillColor(sf::Color::Green);
+                break;
+            case GridType::GOAL:
+                setFillColor(sf::Color::Red);
+                break;
+            case GridType::PATH:
+                setFillColor(sf::Color::Blue);
+                break;
+        }
+        type_ = type;
     }
+
+    GridType Grid::getType() const { return type_; }
+
 }  // namespace mas
