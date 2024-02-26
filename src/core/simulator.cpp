@@ -1,5 +1,9 @@
 #include "core/simulator.hpp"
 
+#include <chrono>
+#include <iostream>
+#include <thread>
+
 namespace mas
 {
 
@@ -252,12 +256,19 @@ namespace mas
 
         map_.getGrids()[goal.y][goal.x].setType(GridType::GOAL);
         auto agent_pos = agents_[0].getPosition();
-        auto start_idx = map_.getGridIndex({static_cast<int>(agent_pos.x),
-                                           static_cast<int>(agent_pos.y)});
-        auto path = path_finder_.findPath(map_, start_idx, goal);
+        auto start_idx = map_.getGridIndex(
+            {static_cast<int>(agent_pos.x), static_cast<int>(agent_pos.y)});
+        const auto start_time = std::chrono::high_resolution_clock::now();
+        auto path             = path_finder_.findPath(map_, start_idx, goal);
+        const auto end_time   = std::chrono::high_resolution_clock::now();
+        std::cout << "Path finding time: "
+                  << std::chrono::duration_cast<std::chrono::microseconds>(end_time -
+                                                                           start_time)
+                         .count()
+                  << "us" << std::endl;
         for (const auto& grid : path)
         {
-            std::cout << grid.x << " " << grid.y << std::endl;
+            // std::cout << grid.x << " " << grid.y << std::endl;
             if (map_.getGrids()[grid.y][grid.x].getType() != GridType::START &&
                 map_.getGrids()[grid.y][grid.x].getType() != GridType::GOAL)
             {

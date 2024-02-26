@@ -19,12 +19,12 @@ namespace mas
 
         HeuristicT manhattan = [](const sf::Vector2i& a, const sf::Vector2i& b)
         {
-            return std::abs(a.x - b.x) + std::abs(a.y - b.y);
+            return (std::abs(a.x - b.x) + std::abs(a.y - b.y)) * 10;
         };
 
         HeuristicT euclidean = [](const sf::Vector2i& a, const sf::Vector2i& b)
         {
-            return static_cast<int>(std::sqrt(std::pow(a.x - b.x, 2) + std::pow(a.y - b.y, 2)));
+            return static_cast<int>(std::sqrt(std::pow(a.x - b.x, 2) + std::pow(a.y - b.y, 2))) * 10;
         };
 
         DirectionT step_directions = direction_map[direction_type];
@@ -44,17 +44,26 @@ namespace mas
         auto isObstacle = [&map](const sf::Vector2i& idx)
         { return map.isGridObstacle(idx); };
 
-        std::priority_queue<Node> open_set;
+        std::vector<Node> open_set;
         std::unordered_set<sf::Vector2i, vector2i_hash> closed_set;
         std::unordered_map<sf::Vector2i, sf::Vector2i, vector2i_hash> parents;
 
         parents[start] = sf::Vector2i(-1, -1);
-        open_set.push(Node(start, 0, getHCost(start, goal)));
+        open_set.push_back(Node(start, 0, getHCost(start, goal)));
 
         while (!open_set.empty())
         {
-            auto current = open_set.top();
-            open_set.pop();
+            auto current_it = open_set.begin();
+            auto current = *current_it;
+
+            for (auto it = open_set.begin(); it != open_set.end(); ++it)
+            {
+                if (it->f_cost < current.f_cost)
+                {
+                    current = *it;
+                    current_it = it;
+                }
+            }
 
             if (current.idx == goal)
             {
@@ -70,6 +79,7 @@ namespace mas
                 return path;
             }
 
+            open_set.erase(current_it);
             closed_set.insert(current.idx);
 
             for (const auto& dir : step_directions)
@@ -82,17 +92,32 @@ namespace mas
                     continue;
                 }
 
-                auto g_cost = current.g_cost + 1;
+                const auto dir_sum = std::abs(dir.first) + std::abs(dir.second);
+                auto g_cost = dir_sum == 2 ? 14 : 10;
+                // auto g_cost = current.g_cost + 1;
                 auto h_cost = getHCost(next, goal);
                 auto f_cost = g_cost + h_cost;
 
-                if (parents.count(next) && f_cost >= open_set.top().f_cost)
+                auto it = std::find_if(open_set.begin(), open_set.end(),
+                                       [&next](const Node& node)
+                                       { return node.idx == next; });
+
+                if (it == open_set.end())
                 {
-                    continue;
+                    open_set.push_back(Node(next, g_cost, h_cost));
+                    parents[next] = current.idx;
                 }
-                open_set.push(Node(next, g_cost, h_cost));
-                parents[next] = current.idx;
+                else
+                {
+                    if (g_cost < it->g_cost)
+                    {
+                        it->g_cost = g_cost;
+                        it->f_cost = f_cost;
+                        parents[next] = current.idx;
+                    }
+                }
             }
+
         }
         return {};
     }

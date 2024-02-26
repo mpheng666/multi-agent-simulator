@@ -22,8 +22,8 @@ namespace mas
                 grid_config.size       = {static_cast<float>(map_config_.grid_size),
                                           static_cast<float>(map_config_.grid_size)};
                 grid_config.fill_color = sf::Color::White;
-                grid_config.outline_color     = sf::Color::Black;
-                grid_config.outline_thickness = 1;
+                // grid_config.outline_color     = sf::Color::Black;
+                // grid_config.outline_thickness = 1;
                 grids_[i][j].setGridConfig(grid_config);
             }
         }
