@@ -19,20 +19,9 @@ set(SOURCES
     src/core/grid.cpp
     src/core/button.cpp
     src/core/agent.cpp
-    src/core/path_finder.cpp
+    src/path_finder/astar.cpp
     src/main.cpp
 )
 
 add_executable(multi_robot_simulator ${SOURCES})
 target_link_libraries(multi_robot_simulator sfml-graphics)
-
-# add_executable(path_finder_node src/path_finder/path_finder_node.cpp)
-
-# add_executable(BFSTest
-#     test/path_finder/bfs_test.cpp
-# )
-# target_link_libraries(BFSTest gtest gtest_main gmock gmock_main)
-
-# enable_testing()
-# include(GoogleTest)
-# gtest_discover_tests(BFSTest)

@@ -14,6 +14,7 @@ namespace mas
         START,
         GOAL,
         PATH,
+        EXPLORED,
     };
 
     struct GridConfig

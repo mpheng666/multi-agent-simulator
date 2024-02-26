@@ -1,4 +1,5 @@
 #include "core/simulator.hpp"
+#include "path_finder/astar.hpp"
 
 int main(int argc, char** argv)
 {
@@ -10,20 +11,23 @@ int main(int argc, char** argv)
     window_config.name   = "Multi-Agent-Simulator";
 
     MapConfig map_config;
-    map_config.col_num   = 60;
-    map_config.row_num   = 40;
-    map_config.grid_size = 20;
+    map_config.col_num   = 1200;
+    map_config.row_num   = 800;
+    map_config.grid_size = 1;
     Map map(map_config);
 
     std::vector<Agent> agents;
     AgentConfig agent_config;
-    agent_config.grid_config = map.getGrids()[0][0].getGridConfig();
+    agent_config.grid_config            = map.getGrids()[0][0].getGridConfig();
     agent_config.grid_config.fill_color = sf::Color::Green;
-    auto start = map.getPosition({10,0});
-    agent_config.grid_config.position = start;
+    auto start                          = map.getPosition({1000, 700});
+    agent_config.grid_config.position   = start;
     agents.emplace_back(agent_config, map);
 
-    AStarPathFinder path_finder;
+    AStarPathFinder path_finder {
+        AStarPathFinder::AstarType::ASTAR,
+        IPathFinder::DirectionType::EIGHT,
+    };
 
     Simulator simulator(window_config, map, agents, path_finder);
     simulator.run();

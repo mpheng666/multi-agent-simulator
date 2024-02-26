@@ -4,7 +4,8 @@
 #include "core/agent.hpp"
 #include "core/button.hpp"
 #include "core/map.hpp"
-#include "core/path_finder.hpp"
+#include "path_finder/path_finder.hpp"
+#include "path_finder/astar.hpp"
 #include "core/window.hpp"
 
 #include <SFML/Graphics.hpp>

@@ -1,5 +1,4 @@
 #include "core/grid.hpp"
-
 namespace mas
 {
     Grid::Grid(const GridConfig& config)
@@ -40,6 +39,9 @@ namespace mas
                 break;
             case GridType::PATH:
                 setFillColor(sf::Color::Blue);
+                break;
+            case GridType::EXPLORED:
+                setFillColor(sf::Color::Yellow);
                 break;
         }
         type_ = type;

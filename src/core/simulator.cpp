@@ -120,7 +120,13 @@ namespace mas
                                                 10);
 
         clear_map_button.setOnClick([this]() { map_.clearObstacles(); });
-        random_obstacles_button.setOnClick([this]() { map_.addRandomObstacles(50); });
+        random_obstacles_button.setOnClick(
+            [this]()
+            {
+                const size_t num_obstacles =
+                    map_.getMapConfig().col_num * map_.getMapConfig().row_num / 5;
+                map_.addRandomObstacles(num_obstacles);
+            });
         run_button.setOnClick(
             [this]()
             {
@@ -252,28 +258,47 @@ namespace mas
     void Simulator::findPath(const sf::Vector2i& start, const sf::Vector2i& goal)
     {
         // map_.getGrids()[start.y][start.x].setType(GridType::START);
-        // path_finder_.direction_type = IPathFinder::DIRECTIONS::FOUR;
-
         map_.getGrids()[goal.y][goal.x].setType(GridType::GOAL);
         auto agent_pos = agents_[0].getPosition();
         auto start_idx = map_.getGridIndex(
             {static_cast<int>(agent_pos.x), static_cast<int>(agent_pos.y)});
-        const auto start_time = std::chrono::high_resolution_clock::now();
-        auto path             = path_finder_.findPath(map_, start_idx, goal);
-        const auto end_time   = std::chrono::high_resolution_clock::now();
-        std::cout << "Path finding time: "
-                  << std::chrono::duration_cast<std::chrono::microseconds>(end_time -
-                                                                           start_time)
-                         .count()
-                  << "us" << std::endl;
-        for (const auto& grid : path)
+        try
         {
-            // std::cout << grid.x << " " << grid.y << std::endl;
-            if (map_.getGrids()[grid.y][grid.x].getType() != GridType::START &&
-                map_.getGrids()[grid.y][grid.x].getType() != GridType::GOAL)
+            AStarPathFinder& path_finder = static_cast<AStarPathFinder&>(path_finder_);
+            const auto start_time        = std::chrono::high_resolution_clock::now();
+            auto path                    = path_finder.findPath(map_, start_idx, goal);
+            const auto end_time          = std::chrono::high_resolution_clock::now();
+            std::cout << "Path finding time: "
+                      << std::chrono::duration_cast<std::chrono::microseconds>(end_time -
+                                                                               start_time)
+                             .count()
+                      << "us" << std::endl;
+
+            const auto explored_nodes = path_finder.getExploredNodes();
+            std::cout << "Explored nodes: " << explored_nodes.size() << std::endl;
+            for (const auto& grid : explored_nodes)
             {
-                map_.getGrids()[grid.y][grid.x].setType(GridType::PATH);
+                // std::cout << grid.x << " " << grid.y << std::endl;
+                if (map_.getGrids()[grid.y][grid.x].getType() != GridType::START &&
+                    map_.getGrids()[grid.y][grid.x].getType() != GridType::GOAL)
+                {
+                    map_.getGrids()[grid.y][grid.x].setType(GridType::EXPLORED);
+                }
             }
+            std::cout << "Path length: " << path.size() << std::endl;
+            for (const auto& grid : path)
+            {
+                if (map_.getGrids()[grid.y][grid.x].getType() != GridType::START &&
+                    map_.getGrids()[grid.y][grid.x].getType() != GridType::GOAL)
+                {
+                    map_.getGrids()[grid.y][grid.x].setType(GridType::PATH);
+                }
+            }
+        }
+        catch (const std::bad_cast& e)
+        {
+            std::cerr << "Failed to cast path_finder_ to AstarPathFinder: " << e.what()
+                      << std::endl;
         }
     }
 

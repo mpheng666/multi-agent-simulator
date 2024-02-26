@@ -83,7 +83,8 @@ namespace mas
         {
             for (size_t j = 0; j < map_config_.col_num; ++j)
             {
-                if (grids_[i][j].getType() == GridType::PATH)
+                if (grids_[i][j].getType() == GridType::PATH ||
+                    grids_[i][j].getType() == GridType::EXPLORED)
                 {
                     grids_[i][j].setType(GridType::EMPTY);
                 }
