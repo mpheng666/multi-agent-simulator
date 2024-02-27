@@ -4,9 +4,8 @@
 #include "core/agent.hpp"
 #include "core/button.hpp"
 #include "core/map.hpp"
-#include "path_finder/path_finder.hpp"
-#include "path_finder/astar.hpp"
 #include "core/window.hpp"
+#include "path_finder/path_finder.hpp"
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Font.hpp>
@@ -38,6 +37,8 @@ namespace mas
 
         void init();
         void drawMap();
+        void renderLines();
+        void drawLines(const std::vector<sf::Vector2i>& path);
         void processEvents();
         bool isMouseOnMap(const sf::Vector2i& mouse_pos);
         void findPath(const sf::Vector2i& start = {0, 0},

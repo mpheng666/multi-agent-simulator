@@ -41,7 +41,7 @@ namespace mas
                 setFillColor(sf::Color::Blue);
                 break;
             case GridType::EXPLORED:
-                setFillColor(sf::Color::Yellow);
+                setFillColor(sf::Color::Magenta);
                 break;
         }
         type_ = type;

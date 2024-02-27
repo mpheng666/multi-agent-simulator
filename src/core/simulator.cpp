@@ -1,5 +1,8 @@
 #include "core/simulator.hpp"
 
+#include "path_finder/astar.hpp"
+#include "path_finder/rrt.hpp"
+
 #include <chrono>
 #include <iostream>
 #include <thread>
@@ -158,6 +161,7 @@ namespace mas
                 button.draw(rwindow_);
             }
             drawMap();
+            renderLines();
             processEvents();
             for (auto& agent : agents_)
             {
@@ -190,7 +194,8 @@ namespace mas
                 }
                 if (isMouseOnMap(mouse_pos))
                 {
-                    auto grid_idx = map_.getGridIndex({mouse_pos.x, mouse_pos.y});
+                    auto grid_idx = map_.getGridIndex({static_cast<float>(mouse_pos.x),
+                                                       static_cast<float>(mouse_pos.y)});
                     if (map_.isGridObstacle(grid_idx))
                     {
                         map_.clearObstacle(grid_idx);
@@ -255,19 +260,42 @@ namespace mas
         }
     }
 
+    void Simulator::renderLines()
+    {
+        // for (auto& agent : agents_)
+        // {
+        //     auto start = agent.getPosition();
+        //     auto goal  = agent.getGoal();
+        //     findPath({static_cast<int>(start.x), static_cast<int>(start.y)},
+        //              {static_cast<int>(goal.x), static_cast<int>(goal.y)});
+        // }
+    }
+
+    void Simulator::drawLines(const std::vector<sf::Vector2i>& path)
+    {
+        for (int i = 1; i < path.size() - 1; i++)
+        {
+            sf::Vertex line[] = {
+                sf::Vertex(map_.getPosition(path[i - 1]), sf::Color::Red),
+                sf::Vertex(map_.getPosition(path[i]), sf::Color::Red)};
+
+            rwindow_.draw(line, 2, sf::Lines);
+        }
+    }
+
     void Simulator::findPath(const sf::Vector2i& start, const sf::Vector2i& goal)
     {
         // map_.getGrids()[start.y][start.x].setType(GridType::START);
         map_.getGrids()[goal.y][goal.x].setType(GridType::GOAL);
         auto agent_pos = agents_[0].getPosition();
-        auto start_idx = map_.getGridIndex(
-            {static_cast<int>(agent_pos.x), static_cast<int>(agent_pos.y)});
+        auto start_idx = map_.getGridIndex({agent_pos.x, agent_pos.y});
         try
         {
-            AStarPathFinder& path_finder = static_cast<AStarPathFinder&>(path_finder_);
-            const auto start_time        = std::chrono::high_resolution_clock::now();
-            auto path                    = path_finder.findPath(map_, start_idx, goal);
-            const auto end_time          = std::chrono::high_resolution_clock::now();
+            // AStarPathFinder& path_finder = static_cast<AStarPathFinder&>(path_finder_);
+            RRTPathFinder& path_finder = static_cast<RRTPathFinder&>(path_finder_);
+            const auto start_time      = std::chrono::high_resolution_clock::now();
+            auto path                  = path_finder.findPath(map_, start_idx, goal);
+            const auto end_time        = std::chrono::high_resolution_clock::now();
             std::cout << "Path finding time: "
                       << std::chrono::duration_cast<std::chrono::microseconds>(end_time -
                                                                                start_time)
@@ -286,14 +314,26 @@ namespace mas
                 }
             }
             std::cout << "Path length: " << path.size() << std::endl;
-            for (const auto& grid : path)
+            for(const auto& p : path)
             {
-                if (map_.getGrids()[grid.y][grid.x].getType() != GridType::START &&
-                    map_.getGrids()[grid.y][grid.x].getType() != GridType::GOAL)
+                if(map_.getGrids()[p.y][p.x].getType() != GridType::START &&
+                   map_.getGrids()[p.y][p.x].getType() != GridType::GOAL)
                 {
-                    map_.getGrids()[grid.y][grid.x].setType(GridType::PATH);
+                    map_.getGrids()[p.y][p.x].setType(GridType::PATH);
                 }
             }
+            // for (int i = 1; i < path.size() - 1; i++)
+            // {
+            //     // std::cout << path[i].x << " " << path[i].y << std::endl;
+            //     map_.getGrids()[path[i].y][path[i].x].setType(GridType::PATH);
+
+            //     // draw line in between path
+            //     sf::Vertex line[] = {
+            //         sf::Vertex(map_.getPosition(path[i - 1]), sf::Color::Red),
+            //         sf::Vertex(map_.getPosition(path[i]), sf::Color::Red)};
+
+            //     rwindow_.draw(line, 2, sf::Lines);
+            // }
         }
         catch (const std::bad_cast& e)
         {

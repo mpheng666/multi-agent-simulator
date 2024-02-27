@@ -12,7 +12,7 @@ namespace mas
 {
     AStarPathFinder::AStarPathFinder(AstarType type, DirectionType direction)
         : type_ {type}
-        , direction_type {direction}
+        , direction_type_ {direction}
     {
     }
 
@@ -22,7 +22,7 @@ namespace mas
     {
         auto row                         = map.getMapConfig().row_num;
         auto col                         = map.getMapConfig().col_num;
-        const DirectionT step_directions = direction_map[direction_type];
+        const DirectionT step_directions = direction_map[direction_type_];
 
         auto isWithinMap = [&map](const sf::Vector2i& idx)
         { return map.isIndexWithinMap(idx); };
@@ -126,7 +126,7 @@ namespace mas
         HeuristicT euclidean = [](const sf::Vector2i& a, const sf::Vector2i& b)
         { return std::sqrt(std::pow(a.x - b.x, 2) + std::pow(a.y - b.y, 2)); };
 
-        if (direction_type == DirectionType::FOUR)
+        if (direction_type_ == DirectionType::FOUR)
         {
             return manhattan(a, b);
         }

@@ -15,7 +15,7 @@ namespace mas
 
     void Agent::move(MoveDirection direction)
     {
-        const sf::Vector2i position = sf::Vector2i(getPosition().x, getPosition().y);
+        const sf::Vector2f position = sf::Vector2f(getPosition().x, getPosition().y);
         sf::Vector2i index          = map_.getGridIndex(position);
         switch (direction)
         {

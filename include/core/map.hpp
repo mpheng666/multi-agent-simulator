@@ -24,7 +24,7 @@ namespace mas
 
         MapConfig getMapConfig() const;
         Grids& getGrids();
-        sf::Vector2i getGridIndex(const sf::Vector2i& position) const;
+        sf::Vector2i getGridIndex(const sf::Vector2f& position) const;
         sf::Vector2f getPosition(const sf::Vector2i& index) const;
         void addObstacle(const sf::Vector2i& index);
         void clearObstacle(const sf::Vector2i& index);

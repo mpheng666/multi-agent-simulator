@@ -20,6 +20,7 @@ set(SOURCES
     src/core/button.cpp
     src/core/agent.cpp
     src/path_finder/astar.cpp
+    src/path_finder/rrt.cpp
     src/main.cpp
 )
 

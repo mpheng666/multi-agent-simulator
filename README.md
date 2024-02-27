@@ -1,13 +1,31 @@
 # multi-agent-simulator
+
 A simple general 2D simulator for single/multi-agents algorithms.
 
-## Can be used for:
-1. Behavioral Modeling
-2. Path Planning
-3. Learning
-4. Synthetic Autonomy
-5. Self-Organized Autonomy
-6. etc
+## Single Agent Path Planning
 
-# Tech stack
-1. SFML for graphics
+- Graph-based
+  - [x] Astar
+  - [x] Dikjstra
+  - [x] Greedy
+  - [ ] Jump point search
+  - [ ] D*
+  - [ ] D* Lite
+  - [ ] Theta*
+  - [ ] Lazy theta*
+  - [ ] Varients of above
+- Sampling-based
+  - [x] RRT
+  - [ ] RRT*
+  - [ ] Informed RRT
+  - [ ] Varients of RRT
+- Roadmap construction-based
+  - [ ] Voronoi Diagram
+  - [ ] Visibility Graph
+- Optimization-based
+- Motion Primitive Library
+- Learning-based
+  
+## Multi Agent Path Planning
+
+- TODO

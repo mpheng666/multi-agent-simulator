@@ -44,7 +44,7 @@ namespace mas
         };
 
         AstarType type_ {AstarType::ASTAR};
-        DirectionType direction_type {DirectionType::EIGHT};
+        DirectionType direction_type_ {DirectionType::EIGHT};
         std::vector<sf::Vector2i> explored_nodes_;
 
         double getGCost(const sf::Vector2i& a, const sf::Vector2i& b) const;
