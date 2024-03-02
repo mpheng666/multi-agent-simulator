@@ -52,10 +52,10 @@ namespace mas
 
         for (int i = 0; i < config_.max_iter; ++i)
         {
-            sf::Vector2i random_node      = getRandomPosition(map);
+            sf::Vector2i random_node   = getRandomPosition(map);
             sf::Vector2i nearest_node  = getNearestNode(random_node, explored_nodes_);
             auto nearest_node_position = map.getPosition(nearest_node);
-            auto random_node_position     = map.getPosition(random_node);
+            auto random_node_position  = map.getPosition(random_node);
 
             auto getDirection = [&random_node_position, &nearest_node_position]()
             { return sf::Vector2f(random_node_position - nearest_node_position); };
@@ -70,15 +70,15 @@ namespace mas
             auto step         = sf::Vector2f(direction.x * config_.step_size,
                                      direction.y * config_.step_size);
             auto new_position = nearest_node_position + step;
-            auto new_node = map.getGridIndex(new_position);
+            auto new_node     = map.getGridIndex(new_position);
 
-            if(parents.count(new_node))
+            if (parents.count(new_node))
             {
                 continue;
             }
 
-            if (!map.isIndexWithinMap(new_node) ||
-                isVertexInObstacle(new_node, map))
+            if (!map.isIndexWithinMap(new_node) || isVertexInObstacle(new_node, map) ||
+                isEdgeInObstacle(nearest_node, new_node, map))
             {
                 continue;
             }
@@ -109,7 +109,7 @@ namespace mas
         return path;
     }
 
-    sf::Vector2i RRTPathFinder::getRandomPosition(const Map& map)
+    sf::Vector2i RRTPathFinder::getRandomPosition(const Map& map) const
     {
         auto row = map.getMapConfig().row_num;
         auto col = map.getMapConfig().col_num;
@@ -120,8 +120,9 @@ namespace mas
         return sf::Vector2i(col_dis(gen), row_dis(gen));
     }
 
-    sf::Vector2i RRTPathFinder::getNearestNode(const sf::Vector2i& new_node,
-                                               const std::vector<sf::Vector2i>& nodes)
+    sf::Vector2i
+    RRTPathFinder::getNearestNode(const sf::Vector2i& new_node,
+                                  const std::vector<sf::Vector2i>& nodes) const
     {
         sf::Vector2i nearest_node;
         double min_dist = std::numeric_limits<double>::max();
@@ -139,14 +140,30 @@ namespace mas
     }
 
     bool RRTPathFinder::isVertexInGoalRegion(const sf::Vector2i& vertex,
-                                             const sf::Vector2i& goal)
+                                             const sf::Vector2i& goal) const
     {
         return (std::sqrt(std::pow(vertex.x - goal.x, 2) +
                           std::pow(vertex.y - goal.y, 2)) < config_.goal_radius);
     }
 
-    bool RRTPathFinder::isVertexInObstacle(const sf::Vector2i& vertex, const Map& map)
+    bool RRTPathFinder::isVertexInObstacle(const sf::Vector2i& vertex,
+                                           const Map& map) const
     {
         return map.isGridObstacle(vertex);
+    }
+
+    bool RRTPathFinder::isEdgeInObstacle(const sf::Vector2i& start,
+                                         const sf::Vector2i& end,
+                                         const Map& map) const
+    {
+        std::vector<sf::Vector2i> grids = map.getGridsBetweenIdx(start, end);
+        for (const auto& grid : grids)
+        {
+            if (map.isGridObstacle(grid))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }  // namespace mas

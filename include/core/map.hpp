@@ -34,6 +34,8 @@ namespace mas
         bool isPositionWithinMap(const sf::Vector2f& position) const;
         void addRandomObstacles(size_t num);
         bool isGridObstacle(const sf::Vector2i& index) const;
+        std::vector<sf::Vector2i> getGridsBetweenIdx(const sf::Vector2i& start,
+                                                    const sf::Vector2i& end) const;
 
         private:
         MapConfig map_config_;

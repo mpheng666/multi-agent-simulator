@@ -2,6 +2,7 @@
 
 #include "path_finder/astar.hpp"
 #include "path_finder/rrt.hpp"
+#include "path_finder/bfs.hpp"
 
 #include <chrono>
 #include <iostream>
@@ -161,7 +162,6 @@ namespace mas
                 button.draw(rwindow_);
             }
             drawMap();
-            renderLines();
             processEvents();
             for (auto& agent : agents_)
             {
@@ -260,17 +260,6 @@ namespace mas
         }
     }
 
-    void Simulator::renderLines()
-    {
-        // for (auto& agent : agents_)
-        // {
-        //     auto start = agent.getPosition();
-        //     auto goal  = agent.getGoal();
-        //     findPath({static_cast<int>(start.x), static_cast<int>(start.y)},
-        //              {static_cast<int>(goal.x), static_cast<int>(goal.y)});
-        // }
-    }
-
     void Simulator::drawLines(const std::vector<sf::Vector2i>& path)
     {
         for (int i = 1; i < path.size() - 1; i++)
@@ -292,7 +281,8 @@ namespace mas
         try
         {
             // AStarPathFinder& path_finder = static_cast<AStarPathFinder&>(path_finder_);
-            RRTPathFinder& path_finder = static_cast<RRTPathFinder&>(path_finder_);
+            // RRTPathFinder& path_finder = static_cast<RRTPathFinder&>(path_finder_);
+            BFS& path_finder = static_cast<BFS&>(path_finder_);
             const auto start_time      = std::chrono::high_resolution_clock::now();
             auto path                  = path_finder.findPath(map_, start_idx, goal);
             const auto end_time        = std::chrono::high_resolution_clock::now();
@@ -322,18 +312,6 @@ namespace mas
                     map_.getGrids()[p.y][p.x].setType(GridType::PATH);
                 }
             }
-            // for (int i = 1; i < path.size() - 1; i++)
-            // {
-            //     // std::cout << path[i].x << " " << path[i].y << std::endl;
-            //     map_.getGrids()[path[i].y][path[i].x].setType(GridType::PATH);
-
-            //     // draw line in between path
-            //     sf::Vertex line[] = {
-            //         sf::Vertex(map_.getPosition(path[i - 1]), sf::Color::Red),
-            //         sf::Vertex(map_.getPosition(path[i]), sf::Color::Red)};
-
-            //     rwindow_.draw(line, 2, sf::Lines);
-            // }
         }
         catch (const std::bad_cast& e)
         {

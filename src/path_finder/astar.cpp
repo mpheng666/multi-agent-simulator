@@ -78,7 +78,7 @@ namespace mas
                     continue;
                 }
                 
-                explored_nodes_.push_back(next);
+                // explored_nodes_.push_back(next);
 
                 const double g_cost =
                     (type_ == AstarType::GREEDY) ? 0.0 : getGCost(current.idx, next);

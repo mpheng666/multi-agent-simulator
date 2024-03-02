@@ -1,6 +1,7 @@
 #include "core/simulator.hpp"
 #include "path_finder/astar.hpp"
 #include "path_finder/rrt.hpp"
+#include "path_finder/bfs.hpp"
 
 int main(int argc, char** argv)
 {
@@ -38,7 +39,10 @@ int main(int argc, char** argv)
     rrt_config.goal_bias = 0.1;
     rrt_config.goal_radius = 3 * mapResolutionFactor;
     rrt_config.type = RRTPathFinder::RRTType::RRT_STAR;
-    RRTPathFinder path_finder(rrt_config);
+
+    // RRTPathFinder path_finder(rrt_config);
+
+    BFS path_finder;
 
     Simulator simulator(window_config, map, agents, path_finder);
     simulator.run();

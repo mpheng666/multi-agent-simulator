@@ -37,7 +37,6 @@ namespace mas
 
         void init();
         void drawMap();
-        void renderLines();
         void drawLines(const std::vector<sf::Vector2i>& path);
         void processEvents();
         bool isMouseOnMap(const sf::Vector2i& mouse_pos);

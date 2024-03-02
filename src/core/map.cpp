@@ -4,6 +4,8 @@ namespace mas
 {
     Map::Map(const MapConfig& map_config)
         : map_config_(map_config)
+        , grids_(std::vector<std::vector<Grid>>(map_config.row_num,
+                                               std::vector<Grid>(map_config.col_num)))
     {
         init();
     }
@@ -122,6 +124,43 @@ namespace mas
     bool Map::isGridObstacle(const sf::Vector2i& index) const
     {
         return grids_[index.y][index.x].getType() == GridType::OBSTACLE;
+    }
+
+    std::vector<sf::Vector2i> Map::getGridsBetweenIdx(const sf::Vector2i& start,
+                                                      const sf::Vector2i& end) const
+    {
+        auto bresenhamLineAlgo = [](int x1, int y1, int x2, int y2)
+        {
+            std::vector<sf::Vector2i> grids;
+            int dx  = std::abs(x2 - x1);
+            int sx  = (x1 < x2) ? 1 : -1;
+            int dy  = std::abs(y2 - y1);
+            int sy  = (y1 < y2) ? 1 : -1;
+            int err = dx - dy;
+
+            while (true)
+            {
+                grids.push_back({x1, y1});
+                if (x1 == x2 && y1 == y2)
+                {
+                    break;
+                }
+                int e2 = 2 * err;
+                if (e2 > -dy)
+                {
+                    err -= dy;
+                    x1 += sx;
+                }
+                if (e2 < dx)
+                {
+                    err += dx;
+                    y1 += sy;
+                }
+            }
+            return grids;
+        };
+
+        return bresenhamLineAlgo(start.x, start.y, end.x, end.y);
     }
 
 }  // namespace mas

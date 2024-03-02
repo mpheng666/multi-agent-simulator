@@ -13,7 +13,7 @@ namespace mas
             RRT,
             RRT_STAR,
         };
-        
+
         struct RRTConfig
         {
             RRTType type {RRTType::RRT_STAR};
@@ -37,11 +37,15 @@ namespace mas
         RRTConfig config_;
         std::vector<sf::Vector2i> explored_nodes_;
 
-        sf::Vector2i getRandomPosition(const Map& map);
+        sf::Vector2i getRandomPosition(const Map& map) const;
         sf::Vector2i getNearestNode(const sf::Vector2i& new_node,
-                                    const std::vector<sf::Vector2i>& nodes);
-        bool isVertexInGoalRegion(const sf::Vector2i& vertex, const sf::Vector2i& goal);
-        bool isVertexInObstacle(const sf::Vector2i& vertex, const Map& map);
+                                    const std::vector<sf::Vector2i>& nodes) const;
+        bool isVertexInGoalRegion(const sf::Vector2i& vertex,
+                                  const sf::Vector2i& goal) const;
+        bool isVertexInObstacle(const sf::Vector2i& vertex, const Map& map) const;
+        bool isEdgeInObstacle(const sf::Vector2i& start,
+                              const sf::Vector2i& end,
+                              const Map& map) const;
     };
 
 }  // namespace mas
